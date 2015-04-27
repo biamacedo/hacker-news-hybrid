@@ -1,4 +1,4 @@
-# hackerNewsApp
+# Hacker News App
 New Cordova App using Hacker News Firebase API
 ## Uses:
 - Apache Cordova
