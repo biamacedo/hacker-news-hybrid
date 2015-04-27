@@ -1,0 +1,9 @@
+<ion-view view-title="New Stories">
+  <ion-content>
+    <ion-list>
+      <ion-item ng-repeat="story in newStories" href="#/app/stories/{{story.id}}">
+        {{story.id}}
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

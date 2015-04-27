@@ -1,0 +1,13 @@
+<ion-view view-title="Top Stories">
+  <ion-content>
+    <ion-list>
+      <!--<ion-item ng-repeat="story in topStories | orderBy:'$id'" href="#/app/topStories/{{story.$value}}">-->
+      <ion-item ng-repeat="story in topStories" href="{{story.url}}">
+        	<span class="item-text-wrap">{{$index+1}} {{story.title}}</span>
+
+		    <span class="item-note">({{ story.url | domain }})</span>
+		    <span class="badge badge-positive">{{story.kids.length}}</span>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
