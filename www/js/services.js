@@ -2,19 +2,38 @@ angular.module('starter.services', [])
 /**
  * A simple example service that returns some data.
  */
-.factory('fireBaseData', function($firebase, $rootScope) {
-    var APIUrl = "https://hacker-news.firebaseio.com/v0/";
-    var ref = new Firebase("https://hacker-news.firebaseio.com/v0/"),
-    refTopStories = new Firebase("https://hacker-news.firebaseio.com/v0/topstories"),
-    refNewStories = new Firebase("https://hacker-news.firebaseio.com/v0/newstories"),
-    refItem = new Firebase("https://hacker-news.firebaseio.com/v0/item/");
+ .factory('fireBaseData', function($firebaseArray) {
+  //var APIUrl = "https://hacker-news.firebaseio.com/v0/";
+  /*var ref = new Firebase("https://hacker-news.firebaseio.com/v0/"),
+  refTopStories = new Firebase("https://hacker-news.firebaseio.com/v0/topstories"),
+  refNewStories = new Firebase("https://hacker-news.firebaseio.com/v0/newstories"),
+  refItem = new Firebase("https://hacker-news.firebaseio.com/v0/item/");*/
+
+  /*var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
+  var itemRef = ref.child('item');
+  var topStories = [];
+  var topStoriesItens = [];
+
+  var storyCallback = function(snapshot) {
+    var story = snapshot.val();
+    topStoriesItens.push(story);
+  }
+
+
+  ref.child('topstories').limitToFirst(10).once('value', function(snapshot) {
+    topStories = snapshot.val();
+    
+    for(var i = 0; i < topStories.length; i++) {
+      itemRef.child(topStories[i]).on('value', storyCallback);
+    }
+  });
 
   return {
     ref: function () {
       return ref;
     },
     refTopStories: function () {
-      return refTopStories;
+      return topStoriesItens;
     },
     refNewStories: function () {
       return refNewStories;
@@ -22,32 +41,15 @@ angular.module('starter.services', [])
     getItem: function(itemID){
       var refItemID = new Firebase("https://hacker-news.firebaseio.com/v0/item/" +itemID);
       return refItemID;
-      //var refItemNumber = new Firebase("https://hacker-news.firebaseio.com/v0/item/" + itemValue);
-      //return new Firebase(APIUrl).child("item").child(itemID);
-      //var itemRef = ref.child('item').child(Number(itemValue));
-      /*var item;
-      refItemNumber.once('value', function(snapshot) {   
-          item = $firebaseObject(
-          console.log(item.id);
-          console.log(item.title);
-          console.log(item.by);
-          console.log(item.url);
-      });*/
-    //var item = {};
-    //refItemNumber.on("value", function(snapshot) {
-      // This isn't going to show up in the DOM immediately, because
-      // Angular does not know we have changed this in memory.
-      // $scope.data = snapshot.val();
-      // To fix this, we can use $scope.$apply() to notify Angular that a change occurred.
-
-        // item = snapshot.val();
-        // console.log(item.id);
-        // return item;
-
-    //});
-      
-      //return refItemNumber;
+    },
+    getAllItensInArray: function(itemArray){
+      var refItens = [];
+      for(itemID in itemArray){
+        var refItemID = new Firebase("https://hacker-news.firebaseio.com/v0/item/" +itemID);
+        refItens.push(refItemID);
+      }
+      return refItens;
     }
-  }
- 
+  }*/
+
 });
