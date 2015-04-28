@@ -46,29 +46,39 @@ angular.module('starter.controllers', [])
 
 .controller('TopStoriesCtrl', function($scope, $firebaseArray) { // fireBaseData removed
 
-  $scope.topStories = [];
-  var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
-  var itemRef = ref.child('item');
+  $scope.doRefresh = function() {
 
-  ref.child('topstories').once('value', function(snapshot) {
-    topStories = snapshot.val();
-    
-    for(var i = 0; i < topStories.length; i++) {
-      //console.log(topStories[i]);
-      itemRef.child(topStories[i]).once('value', function(snapshot) {
-        var story = snapshot.val();
+    $scope.topStories = [];
+    var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
+    var itemRef = ref.child('item');
 
-        //console.log(story);
-        // -- Using $apply to get $scope to notice changes happening on topStories array
-        //$scope.$apply() takes a function or an Angular expression string, and executes it, 
-        //then calls $scope.$digest() to update any bindings or watchers.
-        $scope.$apply(function () {
-          $scope.topStories.push(story);
+    ref.child('topstories').once('value', function(snapshot) {
+      topStories = snapshot.val();
+      
+      for(var i = 0; i < topStories.length; i++) {
+        //console.log(topStories[i]);
+        itemRef.child(topStories[i]).once('value', function(snapshot) {
+          var story = snapshot.val();
+
+          //console.log(story);
+          // -- Using $apply to get $scope to notice changes happening on topStories array
+          //$scope.$apply() takes a function or an Angular expression string, and executes it, 
+          //then calls $scope.$digest() to update any bindings or watchers.
+          $scope.$apply(function () {
+            $scope.topStories.push(story);
+          });
+            
         });
-          
-      });
-    }
-  });
+      }
+    });
+
+    // Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+
+  };
+
+
+
 
 })
 

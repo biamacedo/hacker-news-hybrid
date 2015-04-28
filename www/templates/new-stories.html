@@ -6,7 +6,7 @@
         <span class="item-text-wrap"><b>{{$index+1}}</b> {{story.title}}</span>
 
 		    <span class="item-note">({{ story.url | domain }})</span>
-		    <span class="badge badge-positive">{{story.kids.length}}</span>
+		    <span id="comments" class="badge badge-positive">{{story.descendants}}</span>
         <!--{{ story | json }}-->
       </ion-item>
     </ion-list>

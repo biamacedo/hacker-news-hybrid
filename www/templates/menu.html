@@ -1,4 +1,5 @@
 <ion-side-menus enable-menu-with-back-views="false">
+  <!-- Center content -->
   <ion-side-menu-content>
     <ion-nav-bar class="bar-stable bar-dark">
       <ion-nav-back-button>
@@ -8,26 +9,38 @@
         <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
         </button>
       </ion-nav-buttons>
+      <ion-nav-buttons side="right">
+        <!-- Right View Buttons -->
+        <!--<button class="button button-icon button-clear ion-android-refresh"></button>-->
+      </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
   </ion-side-menu-content>
 
-  <ion-side-menu side="left">
+  <!-- Left menu -->
+  <ion-side-menu expose-aside-when="large" side="left">
     <ion-header-bar class="bar-stable bar-dark">
+      <!--
+      <i class="icon ion-social-hackernews-outline"></i>-->
+      <a class="button button-clear icon ion-social-hackernews-outline" href="https://news.ycombinator.com/news"></a>
       <h1 class="title">Menu</h1>
     </ion-header-bar>
     <ion-content>
       <ion-list>
-        <ion-item nav-clear menu-close ng-click="login()">
+        <ion-item class="item-icon-left" nav-clear menu-close ng-click="login()">
+          <i class="icon ion-android-person"></i>
           Login
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/topStories">
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/topStories">
+          <i class="icon ion-arrow-graph-up-right"></i>
           Top Stories
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/newStories">
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/newStories">
+          <i class="icon ion-document-text"></i>
           New Stories
         </ion-item>
-        <ion-item nav-clear menu-close href="#/app/settings">
+        <ion-item class="item-icon-left" nav-clear menu-close href="#/app/settings">
+          <i class="icon ion-android-settings"></i>
           Settings
         </ion-item>
       </ion-list>

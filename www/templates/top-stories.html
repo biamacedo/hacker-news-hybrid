@@ -1,14 +1,34 @@
 <ion-view view-title="Top Stories">
   <ion-content>
-    <ion-list>
+    <ion-refresher pulling-text="Pull to refresh..."
+      on-refresh="doRefresh()">
+    </ion-refresher>
+    <ion-list ng-init="doRefresh()">
       <!--<ion-item ng-repeat="story in topStories | orderBy:'$id'" href="#/app/topStories/{{story.$value}}">-->
       <ion-item ng-repeat="story in topStories" href="{{story.url}}">
-        <!--<span id="score" class="badge badge-assertive">{{story.score}}</span>-->
-        <span class="item-text-wrap"><b>{{$index+1}}</b> {{story.title}}</span>
 
-		    <span class="item-note">({{ story.url | domain }})</span>
-		    <span id="comments" class="badge badge-positive">{{story.descendants}}</span>
-        <!--{{ story | json }}-->
+        <table>
+          <tr>
+            <td width="30px" align="center">
+              <b id="score">{{story.score}}</b>
+            </td>
+            <td class="item-text-wrap">
+              <table>
+                <tr><td><span id="title">{{story.title}}</span></td>
+                <td>
+                  <span id="domain" class="item-note">({{ story.url | domain }})</span>
+                </td></tr>
+              </table>
+            </td>
+            <td>
+              <span id="comments" class="badge badge-positive">
+                {{story.descendants}}
+              </span>
+            </td>
+          </tr>
+        </table>
+        
+
       </ion-item>
     </ion-list>
   </ion-content>
