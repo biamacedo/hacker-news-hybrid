@@ -1,17 +1,18 @@
 /* Empty. Add your own CSS if you like */
 
 
-#comments {
-	margin-right:-20px;
+
+.story-comments {
+	margin-right:-10px;
 }
 
-#score {
-	margin-left:-20px;
-	text-align: center;
-}
-
-#score {
-	margin-left:-20px;
+.story-domain {
+	margin-right: 20px;
 }
 
 
+.story-title {
+	margin-left: 20px;
+	margin-right: 20px;
+
+}

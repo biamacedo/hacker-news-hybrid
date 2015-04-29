@@ -45,40 +45,49 @@ angular.module('starter.controllers', [])
 })
 
 .controller('TopStoriesCtrl', function($scope, $firebaseArray) { // fireBaseData removed
-
-  $scope.doRefresh = function() {
-
-    $scope.topStories = [];
     var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
     var itemRef = ref.child('item');
 
+  $scope.retrieveStoriesID = function(callback){
+    $scope.storiesIds = [];
+
     ref.child('topstories').once('value', function(snapshot) {
       topStories = snapshot.val();
-      
-      for(var i = 0; i < topStories.length; i++) {
-        //console.log(topStories[i]);
-        itemRef.child(topStories[i]).once('value', function(snapshot) {
+      //console.log(topStories);
+      callback(topStories);
+       //console.log($scope.storiesIds);
+
+    });
+  };
+
+  $scope.doRefresh = function() {
+
+    $scope.retrieveStoriesID( function(storyIDs){
+
+      $scope.topStories = [];
+      //console.log(storyIDs);
+
+      for(var i = 0; i < storyIDs.length; i++) {
+        //console.log(storyIDs[i]);
+        itemRef.child(storyIDs[i]).once('value', function(snapshot) {
           var story = snapshot.val();
 
           //console.log(story);
-          // -- Using $apply to get $scope to notice changes happening on topStories array
-          //$scope.$apply() takes a function or an Angular expression string, and executes it, 
-          //then calls $scope.$digest() to update any bindings or watchers.
-          $scope.$apply(function () {
-            $scope.topStories.push(story);
+            // -- Using $apply to get $scope to notice changes happening on topStories array
+            //$scope.$apply() takes a function or an Angular expression string, and executes it, 
+            //then calls $scope.$digest() to update any bindings or watchers.
+            $scope.$apply(function () {
+              $scope.topStories.push(story);
+            });
+
           });
-            
-        });
       }
+
+      // Stop the ion-refresher from spinning
+      $scope.$broadcast('scroll.refreshComplete');
     });
 
-    // Stop the ion-refresher from spinning
-    $scope.$broadcast('scroll.refreshComplete');
-
   };
-
-
-
 
 })
 
@@ -104,7 +113,7 @@ angular.module('starter.controllers', [])
         $scope.$apply(function () {
           $scope.newStories.push(story);
         });
-          
+
       });
     }
   });
@@ -112,6 +121,59 @@ angular.module('starter.controllers', [])
 })
 
 .controller('SettingsCtrl', function($scope) {
+
+})
+
+.controller('CommentsCtrl', function($scope, $stateParams) {
+    var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
+    var itemRef = ref.child('item');
+    $scope.storyComments = [];
+    $scope.story = null;
+
+    itemRef.child($stateParams.storyId).once('value', function(snapshot) {
+      story = snapshot.val();
+
+      $scope.$apply(function () {
+        $scope.story = story;
+      });
+
+      storyComments = story.kids;
+
+      for(var i = 0; i < storyComments.length; i++) {
+        //console.log(newStories[i]);
+        itemRef.child(storyComments[i]).once('value', function(snapshot) {
+          var comment = snapshot.val();
+
+          //console.log(story);
+          // -- Using $apply to get $scope to notice changes happening on newStories array
+          //$scope.$apply() takes a function or an Angular expression string, and executes it, 
+          //then calls $scope.$digest() to update any bindings or watchers.
+          $scope.$apply(function () {
+            //Code to format html of comments, because the first paragraph does not contain <p>
+            var text = comment.text;
+            if(typeof text === 'string'){
+                if (text.indexOf("<p>") > -1){
+                var subText = text.slice(0, text.indexOf("<p>"));
+                var subText = "<p>" + subText + "</p>";
+                var fullText = subText + text.slice(text.indexOf("<p>"), text.length);
+              } else {
+                var subText = text
+                var subText = "<p>" + subText + "</p>";
+                var fullText = subText;
+              }
+            }
+
+            var tag = document.createElement('div');
+            tag.innerHTML = fullText;
+       
+            comment.text = tag.innerHTML;
+
+            $scope.storyComments.push(comment);
+          });
+
+        });
+      }
+    });
 
 })
 

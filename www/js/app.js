@@ -55,6 +55,16 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     }
   })
 
+  .state('app.comments', {
+    url: "/comments/:storyId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/comments.html",
+        controller: 'CommentsCtrl'
+      }
+    }
+  })
+
   .state('app.newStories', {
     url: "/newStories",
     views: {
