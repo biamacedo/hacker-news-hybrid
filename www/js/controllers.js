@@ -47,27 +47,31 @@ angular.module('starter.controllers', [])
 .controller('TopStoriesCtrl', function($scope, $firebaseArray) { // fireBaseData removed
     var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
     var itemRef = ref.child('item');
+    $scope.pageSize = 10;
+    $scope.totalItemsLoaded = 0;
+    $scope.totalItemsArray = 500; // Set on Firebase Database by Hacker News
 
   $scope.retrieveStoriesID = function(callback){
     $scope.storiesIds = [];
 
-    ref.child('topstories').limitToFirst(20).once('value', function(snapshot) {
+    ref.child('topstories').once('value', function(snapshot) {
       topStories = snapshot.val();
       //console.log(topStories);
       callback(topStories);
-       //console.log($scope.storiesIds);
+      //console.log($scope.storiesIds);
 
     });
   };
 
   $scope.doRefresh = function() {
+    $scope.totalItemsLoaded = 0;
 
     $scope.retrieveStoriesID( function(storyIDs){
 
       $scope.topStories = [];
       //console.log(storyIDs);
-
-      for(var i = 0; i < storyIDs.length; i++) {
+      // storyIDs.length
+      for(var i = 0; i < $scope.pageSize; i++) {
         //console.log(storyIDs[i]);
         itemRef.child(storyIDs[i]).once('value', function(snapshot) {
           var story = snapshot.val();
@@ -78,6 +82,9 @@ angular.module('starter.controllers', [])
             //then calls $scope.$digest() to update any bindings or watchers.
             $scope.$apply(function () {
               $scope.topStories.push(story);
+              var totalLoaded = $scope.totalItemsLoaded;
+              $scope.totalItemsLoaded = totalLoaded +1;
+              //console.log($scope.totalItemsLoaded);
             });
 
           });
@@ -88,6 +95,48 @@ angular.module('starter.controllers', [])
     });
 
   };
+
+  $scope.loadMoreData = function() {
+
+    $scope.retrieveStoriesID( function(storyIDs){
+
+      //console.log(storyIDs);
+      var nextItemIndex = $scope.totalItemsLoaded +1;
+
+      for(var i = nextItemIndex; i < nextItemIndex+$scope.pageSize; i++) {
+        //console.log(storyIDs[i]);
+        itemRef.child(storyIDs[i]).once('value', function(snapshot) {
+          var story = snapshot.val();
+
+        //console.log(story);
+          // -- Using $apply to get $scope to notice changes happening on topStories array
+          //$scope.$apply() takes a function or an Angular expression string, and executes it, 
+          //then calls $scope.$digest() to update any bindings or watchers.
+          $scope.$apply(function () {
+            $scope.topStories.push(story);
+            var totalLoaded = $scope.totalItemsLoaded;
+            $scope.totalItemsLoaded = totalLoaded +1;
+          });
+
+        });
+      }
+
+      // Stop the ion-refresher from spinning
+      $scope.$broadcast('scroll.infiniteScrollComplete');
+    });
+  }
+
+  $scope.$on('$stateChangeSuccess', function() {
+    $scope.loadMoreData();
+  });
+
+  $scope.moreDataCanBeLoaded = function() {
+    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 })
 
