@@ -51,7 +51,7 @@ angular.module('starter.controllers', [])
   $scope.retrieveStoriesID = function(callback){
     $scope.storiesIds = [];
 
-    ref.child('topstories').once('value', function(snapshot) {
+    ref.child('topstories').limitToFirst(20).once('value', function(snapshot) {
       topStories = snapshot.val();
       //console.log(topStories);
       callback(topStories);

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.hackernews878159" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>hackerNews</name>
+<widget id="com.bmdev.ionic.hackernews" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Hacker News App</name>
   <description>
-        An Ionic Framework and Cordova project.
+        An Ionic Framework and Cordova project using Firebase Database.
     </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+  <author email="bia.macedo13@gmail.com" href="">
+      Beatriz Macedo
     </author>
   <content src="index.html"/>
   <access origin="*"/>
