@@ -7,10 +7,10 @@
     </ion-refresher>
     <ion-list ng-init="doRefresh()">
       <!--http://www.iperform.nl/en/blog/post/cordova-open-external-link-->
-      <ion-item ng-repeat="story in topStories" href="{{story.url}}" onClick="javascript:return openExternal(this)">
+      <ion-item ng-repeat="story in topStories" type="item-link" href="{{story.url}}" onClick="javascript:return openExternal(this)">
 
                 <span class="story-score"><b>{{story.score}}</b></span>
-                <span class="story-title item-text-wrap">{{story.title}} <a href="#" class="subdued">[{{story.time * 1000 | date:'MM-dd-yyyy'}}]</a></span>
+                <span class="story-title item-text-wrap">{{story.title}} <a href="#" class="story-time-ago subdued">[{{story.time * 1000 | timeAgo}}]</a></span> <!-- | filter:timeAgo date:'MM-dd-yyyy'-->
                 <span class="story-domain item-note">({{ story.url | domain }})</span>
                 <a href="#/app/comments/{{story.id}}" class="story-comments badge badge-positive">{{story.descendants}}</a>
                 

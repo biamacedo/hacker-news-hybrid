@@ -47,7 +47,7 @@ angular.module('starter.controllers', [])
 .controller('TopStoriesCtrl', function($scope, $firebaseArray) { // fireBaseData removed
     var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
     var itemRef = ref.child('item');
-    $scope.pageSize = 10;
+    $scope.pageSize = 20;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 500; // Set on Firebase Database by Hacker News
 
@@ -71,7 +71,7 @@ angular.module('starter.controllers', [])
       $scope.topStories = [];
       //console.log(storyIDs);
       // storyIDs.length
-      for(var i = 0; i < $scope.pageSize; i++) {
+      for(var i = 0; i < $scope.pageSize && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
         //console.log(storyIDs[i]);
         itemRef.child(storyIDs[i]).once('value', function(snapshot) {
           var story = snapshot.val();
@@ -93,50 +93,41 @@ angular.module('starter.controllers', [])
       // Stop the ion-refresher from spinning
       $scope.$broadcast('scroll.refreshComplete');
     });
-
   };
 
   $scope.loadMoreData = function() {
+    console.log('Loading more data!');
+    //$timeout(function() {
 
     $scope.retrieveStoriesID( function(storyIDs){
-
-      //console.log(storyIDs);
-      var nextItemIndex = $scope.totalItemsLoaded +1;
-
-      for(var i = nextItemIndex; i < nextItemIndex+$scope.pageSize; i++) {
+      console.log(storyIDs);
+      // storyIDs.length
+      for(var i = $scope.totalItemsLoaded; i < $scope.pageSize && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
         //console.log(storyIDs[i]);
         itemRef.child(storyIDs[i]).once('value', function(snapshot) {
           var story = snapshot.val();
 
-        //console.log(story);
-          // -- Using $apply to get $scope to notice changes happening on topStories array
-          //$scope.$apply() takes a function or an Angular expression string, and executes it, 
-          //then calls $scope.$digest() to update any bindings or watchers.
-          $scope.$apply(function () {
-            $scope.topStories.push(story);
-            var totalLoaded = $scope.totalItemsLoaded;
-            $scope.totalItemsLoaded = totalLoaded +1;
+          //console.log(story);
+            // -- Using $apply to get $scope to notice changes happening on topStories array
+            //$scope.$apply() takes a function or an Angular expression string, and executes it, 
+            //then calls $scope.$digest() to update any bindings or watchers.
+            $scope.$apply(function () {
+              $scope.topStories.push(story);
+              var totalLoaded = $scope.totalItemsLoaded;
+              $scope.totalItemsLoaded = totalLoaded +1;
+              //console.log($scope.totalItemsLoaded);
+            });
+
           });
-
-        });
       }
-
-      // Stop the ion-refresher from spinning
-      $scope.$broadcast('scroll.infiniteScrollComplete');
+      $scope.$apply(function () {
+        $scope.$broadcast('scroll.infiniteScrollComplete');
+        $scope.$broadcast('scroll.resize');
+      });
     });
-  }
 
-  $scope.$on('$stateChangeSuccess', function() {
-    $scope.loadMoreData();
-  });
-
-  $scope.moreDataCanBeLoaded = function() {
-    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
-      return true;
-    } else {
-      return false;
-    }
-  }
+  //}, 10000);
+  };
 
 })
 
