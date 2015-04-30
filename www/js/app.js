@@ -36,7 +36,6 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
 })
 
 // Custom Filter to display how much time has passed from date
-// Time must be in Unix Time
 .filter( 'timeAgo', function () {
   return function( input ) {
     return moment(input).fromNow()
