@@ -6,7 +6,7 @@
 	    <span class="item-text-wrap"><b>{{story.title}}</b> by {{story.by}}</span>
 	  </div>
 	  <div class="item" ng-repeat="comment in storyComments">
-	    <span class="item-text-wrap" ng-bind-html="comment.text"></span>
+	    <span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
     	<span class="item-note">({{ comment.by }} at {{comment.time * 1000 | date:'MM-dd-yyyy'}})</span>
 	  </div>
 	</div>

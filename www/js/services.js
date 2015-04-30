@@ -2,54 +2,62 @@ angular.module('starter.services', [])
 /**
  * A simple example service that returns some data.
  */
- .factory('fireBaseData', function($firebaseArray) {
-  //var APIUrl = "https://hacker-news.firebaseio.com/v0/";
-  /*var ref = new Firebase("https://hacker-news.firebaseio.com/v0/"),
-  refTopStories = new Firebase("https://hacker-news.firebaseio.com/v0/topstories"),
-  refNewStories = new Firebase("https://hacker-news.firebaseio.com/v0/newstories"),
-  refItem = new Firebase("https://hacker-news.firebaseio.com/v0/item/");*/
-
-  /*var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
+ .factory('fireBaseData', function($firebaseArray, $q) {
+  var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
   var itemRef = ref.child('item');
-  var topStories = [];
-  var topStoriesItens = [];
+  var topStoriesIds = [];  // Array that contains the Top Stories ids
+  //var topStoriesItems = []; // Array that contains the Top Stories objects, acquired by getting item with the top story id
+  var pageSize = 20; // Total of items in a page, supposed to load 20 items at a time
 
-  var storyCallback = function(snapshot) {
+  /*var storyCallback = function(snapshot) {
     var story = snapshot.val();
-    topStoriesItens.push(story);
+    topStoriesItems.push(story);
   }
 
-
-  ref.child('topstories').limitToFirst(10).once('value', function(snapshot) {
-    topStories = snapshot.val();
-    
-    for(var i = 0; i < topStories.length; i++) {
-      itemRef.child(topStories[i]).on('value', storyCallback);
-    }
-  });
+  ref.child('topstories').once('value', function(snapshot) {
+    topStoriesIds = snapshot.val();
+  });*/
 
   return {
-    ref: function () {
-      return ref;
+    getPageSize: function () {
+      return pageSize;
     },
-    refTopStories: function () {
-      return topStoriesItens;
+    getTotalTopStories: function () {
+      return topStoriesIds.length;
     },
-    refNewStories: function () {
-      return refNewStories;
+    getTopStories: function () {
+      return $q(function(resolve, reject) { 
+        setTimeout(function() {
+          ref.child('topstories').once('value', function(snapshot) {
+            topStoriesIds = snapshot.val();
+            console.log(topStoriesIds);
+            //return topStoriesIds;
+          });
+          resolve(topStoriesIds);
+        }, 1000);
+      });
     },
     getItem: function(itemID){
-      var refItemID = new Firebase("https://hacker-news.firebaseio.com/v0/item/" +itemID);
-      return refItemID;
+      var story;
+      itemRef.child(itemID).once('value', function(snapshot) {
+          story = snapshot.val();
+        });
+      return story;
     },
-    getAllItensInArray: function(itemArray){
-      var refItens = [];
-      for(itemID in itemArray){
-        var refItemID = new Firebase("https://hacker-news.firebaseio.com/v0/item/" +itemID);
-        refItens.push(refItemID);
-      }
-      return refItens;
+    getNextPage: function(startIndex){
+      return $q(function(resolve, reject) { 
+        setTimeout(function() {
+                  var topStoriesItems = [];
+                  for(var i = startIndex; i < (startIndex+pageSize) && i < topStoriesIds.length; i++) {
+                    itemRef.child(topStoriesIds[i]).once('value', function(snapshot) {
+                      var story = snapshot.val();
+                      topStoriesItems.push(story);
+                    });
+                  }
+                  resolve(topStoriesItems);
+        }, 1000);
+      });
     }
-  }*/
+  };
 
 });
