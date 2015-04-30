@@ -39,12 +39,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
 // Time must be in Unix Time
 .filter( 'timeAgo', function () {
   return function( input ) {
-
-    //var currentDate = new Date();
-    var inputDate = new Date(input);
-    //var timePassed = (currentDate-unixDate); // difference in milliseconds
-
-    return moment(inputDate.toString()).fromNow()
+    return moment(input).fromNow()
   }
 })
 
