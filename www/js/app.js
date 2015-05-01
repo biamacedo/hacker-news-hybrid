@@ -23,15 +23,9 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
 // Custom Filter to show only domain of url
 .filter( 'domain', function () {
   return function ( input ) {
-    var matches,
-        output = "",
-        urls = /\w+:\/\/([\w|\.]+)/;
-
-    matches = urls.exec( input );
-
-    if ( matches !== null ) output = matches[1];
-
-    return output;
+    var link = document.createElement("a");
+    link.href = input;
+    return link.hostname;
   };
 })
 
