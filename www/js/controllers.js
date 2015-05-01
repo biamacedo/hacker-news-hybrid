@@ -44,7 +44,7 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('TopStoriesCtrl', function($scope, $firebaseArray) { // fireBaseData removed
+.controller('TopStoriesCtrl', function($scope, $state, $firebaseArray) { // fireBaseData removed
     var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
     var itemRef = ref.child('item');
     $scope.pageSize = 20;
@@ -137,6 +137,10 @@ angular.module('starter.controllers', [])
     var ref = window.open(url, '_blank', 'location=yes'); 
     return false;
   };
+
+  $scope.goToCommentsPage = function(id){
+    $state.go('app.comments', {'storyId': id})
+  }
 
 })
 

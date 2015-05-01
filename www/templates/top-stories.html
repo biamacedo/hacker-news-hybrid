@@ -5,7 +5,7 @@
       spinner="ios"
       pulling-icon="ion-arrow-up-c">
     </ion-refresher>
-    <ion-list ng-init="doRefresh()">
+    <ion-list ng-init="doRefresh()" can-swipe="true">
       <!--http://www.iperform.nl/en/blog/post/cordova-open-external-link-->
 
       <ion-item class="item item-icon-left item-icon-right"
@@ -26,11 +26,20 @@
             ({{ story.url | domain }})
           </span>
           <i class="icon">
-            <a class="story-comments badge badge-positive" 
-               href="#/app/comments/{{story.id}}">
+            <a class="story-comments badge badge-positive" >
+               <!--href="#/app/comments/{{story.id}}">-->
                {{story.descendants}}
             </a>
           </i>
+
+          <ion-option-button class="button-clear button-positive"
+                       ng-click="share(item)">
+            <i class="icon ion-share custom-icon"></i>
+          </ion-option-button>
+          <ion-option-button class="button-clear button-positive"
+                             ng-click="goToCommentsPage(story.id)">
+            <i class="icon ion-chatbox-working custom-icon"></i>
+          </ion-option-button>
       </ion-item>
                 
       <ion-item ng-show="moreDataCanBeLoaded()">
