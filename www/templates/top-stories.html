@@ -8,7 +8,7 @@
     <ion-list ng-init="doRefresh()">
       <!--http://www.iperform.nl/en/blog/post/cordova-open-external-link-->
 
-      <a class="item item-icon-left item-icon-right"
+      <ion-item class="item item-icon-left item-icon-right"
          ng-repeat="story in topStories"
          href="{{story.url}}">
           <i class="icon">
@@ -17,7 +17,7 @@
             </button>
           </i>
           <span class="story-title item-text-wrap">
-            {{story.title}} 
+            {{$index+1}} - {{story.title}} 
             <span class="story-time-ago subdued">
               [{{story.time * 1000 | timeAgo}}]
             </span>
@@ -26,12 +26,12 @@
             ({{ story.url | domain }})
           </span>
           <i class="icon">
-            <i class="story-comments badge badge-positive" 
+            <a class="story-comments badge badge-positive" 
                href="#/app/comments/{{story.id}}">
                {{story.descendants}}
-            </i>
+            </a>
           </i>
-      </a>
+      </ion-item>
                 
       <ion-item ng-show="moreDataCanBeLoaded()">
         <button class="button button-block button-outline button-small button-small button-dark" 
