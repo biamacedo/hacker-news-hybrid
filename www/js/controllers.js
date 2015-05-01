@@ -139,8 +139,22 @@ angular.module('starter.controllers', [])
   };
 
   $scope.goToCommentsPage = function(id){
-    $state.go('app.comments', {'storyId': id})
-  }
+    $state.go('app.comments', {'storyId': id});
+  };
+
+  $scope.share = function(title, url) {
+        if (window.plugins && window.plugins.socialsharing) {
+            window.plugins.socialsharing.share(title,
+                'Hacker News', null, url,
+                function() {
+                    console.log("Success")
+                },
+                function (error) {
+                    console.log("Share fail " + error)
+                });
+        }
+        else console.log("Share plugin not available");
+}
 
 })
 

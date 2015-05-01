@@ -2,11 +2,11 @@
 <widget id="com.bmdev.ionic.hackernews" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
   <name>Hacker News Reader</name>
   <description>
-        An Ionic Framework and Apache Cordova project using Hacker News Firebase API.
-    </description>
+    An Ionic Framework and Apache Cordova project using Hacker News Firebase API.
+  </description>
   <author email="bia.macedo13@gmail.com" href="">
-      Beatriz Macedo - BM Development
-    </author>
+    Beatriz Macedo - BM Development
+  </author>
   <content src="index.html"/>
   <access origin="*"/>
   <preference name="webviewbounce" value="false"/>
@@ -17,6 +17,12 @@
   <preference name="SplashScreenDelay" value="3000"/>
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
+  </feature>
+  <feature name="SocialSharing">
+    <param name="ios-package" value="SocialSharing" />
+  </feature>
+  <feature name="SocialSharing">
+    <param name="android-package" value="nl.xservices.plugins.SocialSharing" />
   </feature>
   <feature name="InAppBrowser">
     <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser"/>

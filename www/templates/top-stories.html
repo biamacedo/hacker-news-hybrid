@@ -33,7 +33,7 @@
           </i>
 
           <ion-option-button class="button-clear button-positive"
-                       ng-click="share(item)">
+                       ng-click="share(story.title, story.url)">
             <i class="icon ion-share custom-icon"></i>
           </ion-option-button>
           <ion-option-button class="button-clear button-positive"
@@ -49,7 +49,6 @@
         </button>
       </ion-item>
     </ion-list>
-
     <!--<ion-infinite-scroll
       ng-if="moreDataCanBeLoaded()"
       icon="ion-loading-c"
