@@ -10,7 +10,7 @@
 
       <ion-item class="item item-icon-left item-icon-right"
          ng-repeat="story in topStories"
-         href="{{story.url}}">
+         ng-click="openBrowser(story.url)"> <!--href="{{story.url}}" target="_blank" -->
           <i class="icon">
             <button class="story-score button button-small button-dark">
               <i>{{story.score}}</i>

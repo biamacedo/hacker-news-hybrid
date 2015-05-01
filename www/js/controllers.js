@@ -129,6 +129,15 @@ angular.module('starter.controllers', [])
   //}, 10000);
   };
 
+  //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    //_self : WebView
+    //_blank : InAppBrowser
+    //_system : Externaç Browser
+    var ref = window.open(url, '_blank', 'location=yes'); 
+    return false;
+  };
+
 })
 
 .controller('NewStoriesCtrl', function($scope, $firebaseArray) { // fireBaseData removed
