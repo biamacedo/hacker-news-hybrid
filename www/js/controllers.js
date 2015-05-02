@@ -31,6 +31,15 @@ angular.module('starter.controllers', [])
       $scope.closeLogin();
     }, 1000);
   };
+
+    //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    //_self : WebView
+    //_blank : InAppBrowser
+    //_system : Externaç Browser
+    var ref = window.open(url, '_blank', 'location=yes'); 
+    return false;
+  };
 })
 
 .controller('PlaylistsCtrl', function($scope) {
@@ -220,15 +229,16 @@ angular.module('starter.controllers', [])
           $scope.$apply(function () {
             //Code to format html of comments, because the first paragraph does not contain <p>
             var text = comment.text;
+            var fullText ="";
             if(typeof text === 'string'){
                 if (text.indexOf("<p>") > -1){
                 var subText = text.slice(0, text.indexOf("<p>"));
                 var subText = "<p>" + subText + "</p>";
-                var fullText = subText + text.slice(text.indexOf("<p>"), text.length);
+                fullText = subText + text.slice(text.indexOf("<p>"), text.length);
               } else {
                 var subText = text
                 var subText = "<p>" + subText + "</p>";
-                var fullText = subText;
+                fullText = subText;
               }
             }
 
@@ -251,10 +261,31 @@ angular.module('starter.controllers', [])
     itemRef.child($stateParams.storyId).once('value', function(snapshot) {
       story = snapshot.val();
 
+      var text = story.text;
+      var fullText ="";
+      if(typeof text === 'string'){
+          if (text.indexOf("<p>") > -1){
+          var subText = text.slice(0, text.indexOf("<p>"));
+          var subText = "<p>" + subText + "</p>";
+          fullText = subText + text.slice(text.indexOf("<p>"), text.length);
+        } else {
+          var subText = text
+          var subText = "<p>" + subText + "</p>";
+          fullText = subText;
+        }
+      }
+
+      //Code for asks, to show their description
+      var tag = document.createElement('div');
+      tag.innerHTML = fullText;
+      story.text = tag.innerHTML;
+
       $scope.$apply(function () {
         $scope.story = story;
       });
-      //console.log(story);
+      //console.log(story)
+
+
       storyComments = story.kids;
 
       searchForComments(storyComments);
