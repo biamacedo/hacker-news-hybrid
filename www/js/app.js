@@ -50,7 +50,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     url: "/topStories",
     views: {
       'menuContent': {
-        templateUrl: "templates/top-stories.html",
+        templateUrl: "templates/story-list.html",
         controller: 'TopStoriesCtrl'
       }
     }
@@ -70,7 +70,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     url: "/newStories",
     views: {
       'menuContent': {
-        templateUrl: "templates/new-stories.html",
+        templateUrl: "templates/story-list.html",
         controller: 'NewStoriesCtrl'
       }
     }
@@ -79,8 +79,17 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     url: "/askStories",
     views: {
       'menuContent': {
-        templateUrl: "templates/ask-stories.html",
+        templateUrl: "templates/story-list.html",
         controller: 'AskStoriesCtrl'
+      }
+    }
+  })
+  .state('app.showStories', {
+    url: "/showStories",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/story-list.html",
+        controller: 'ShowStoriesCtrl'
       }
     }
   })
