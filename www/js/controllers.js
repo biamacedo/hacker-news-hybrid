@@ -400,8 +400,8 @@ angular.module('starter.controllers', [])
 .controller('JobStoriesCtrl', function($scope, $state, hackerNewsApi) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
-    $scope.totalItemsArray = 200; // Set on Firebase Database by Hacker News
-    $scope.viewTitle = "Show HN"; //Necessary because all lists use the same template
+    $scope.totalItemsArray = 0; // Total Array Size
+    $scope.viewTitle = "Jobs"; //Necessary because all lists use the same template
     var storiesIds = [];
 
   $scope.doRefresh = function() {
@@ -411,9 +411,10 @@ angular.module('starter.controllers', [])
     hackerNewsApi.getJobStories()
         .then(function (result) {
           storiesIds = result.data;
-          console.log(storiesIds);
-
-                for (var i = 0; i < $scope.pageSize; i++) {
+          //console.log(storiesIds);
+          $scope.totalItemsArray = storiesIds.length;
+                for (var i = 0; i < $scope.pageSize 
+                    && i < $scope.totalItemsArray; i++) { // Only list that can have less items then the Page Size
                   hackerNewsApi.getItem(storiesIds[i])
                     .then(function (result) {
                       $scope.storyList.push(result.data);
@@ -432,7 +433,7 @@ angular.module('starter.controllers', [])
     console.log('Loading more data!');
 
     for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
-      && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
+      && $scope.totalItemsLoaded < $scope.totalItemsArray; i++) {
       hackerNewsApi.getItem(storiesIds[i])
         .then(function (result) {
           $scope.storyList.push(result.data);
@@ -739,5 +740,7 @@ angular.module('starter.controllers', [])
         $scope.getFrontPage();
         break;
     };
+})
+.controller('AboutCtrl', function($scope) {
 });
 
