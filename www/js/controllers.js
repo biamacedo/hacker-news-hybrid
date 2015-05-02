@@ -371,6 +371,86 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('SearchCtrl', function($scope, $state) {
+  console.log("At least controller correct");
+
+  $scope.goToResults = function(type, data) {
+       console.log("Moving to Results");
+        $state.go('app.searchResults', {'type': type, 'text': data});
+        console.log("did we go?!");
+  };
+
+})
+
+.controller('SearchResultsCtrl', function($scope, $stateParams, searchApi) {
+    console.log("arrived at results!");
+    $scope.type = $stateParams.type;
+    console.log($stateParams.type);
+    console.log($stateParams.text);
+
+  $scope.getItem = function(itemId) {
+    console.log("correct function?");
+    searchApi.getItem(itemId)
+      .then(function (result) {
+        console.log(JSON.stringify(result.data));
+        var resultArray = [];
+        resultArray.push(result.data);
+        $scope.resultsList = resultArray;
+      });
+  };
+
+  $scope.getUser = function(userName) {
+    console.log("correct user?");
+    searchApi.getUser(userName)
+      .then(function (result) {
+        console.log(JSON.stringify(result.data));
+        var resultArray = [];
+        resultArray.push(result.data);
+        $scope.resultsList = resultArray;
+      });
+  };
+
+  $scope.getFrontPage = function() {
+    console.log("correct front page?");
+    searchApi.getFrontPage()
+      .then(function (result) {
+        console.log(JSON.stringify(result.data));
+        var resultArray = [];
+        resultArray.push(result.data);
+        $scope.resultsList = resultArray[0].hits;
+      });
+  };
+
+
+    switch($stateParams.type){
+      case '1': // Story
+        console.log("option 1!");
+        $scope.getItem($stateParams.text);
+        break;
+      case '2': // Comment
+        console.log("option 2!");
+        $scope.getUser($stateParams.text);
+        break;
+      case '3': // User
+        console.log("option 3!");
+        $scope.getUser($stateParams.text);
+        break;
+      case '4': // Ask
+        console.log("option 4!");
+        $scope.getUser($stateParams.text);
+        break;
+      case '5': // Show
+        console.log("option 5!");
+        $scope.getUser($stateParams.text);
+        break;
+      case '6': // Poll
+        console.log("option 6!");
+        $scope.getUser($stateParams.text);
+        break;
+      case '7': // Front Page
+        console.log("option 7!");
+        $scope.getFrontPage();
+        break;
+    };
 });
 

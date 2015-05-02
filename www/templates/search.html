@@ -1,5 +1,32 @@
 <ion-view view-title="Search">
   <ion-content>
-    <h1>Search</h1>
+    	<div class="list list-inset">
+    		<form name="form">
+			  <label class="item item-input">
+			    <i class="icon ion-search placeholder-icon"></i>
+			    <input type="text" placeholder="Search" name="searchField" ng-model="search.data">
+			  </label>
+			  <label class="item item-input item-select">
+			    <div class="input-label">
+			      Type
+			    </div>
+			    <select ng-model ="search.type" required>
+			      <option ng-value="1" selected>Story</option>
+			      <option ng-value="2">Comment</option>
+			      <option ng-value="3">User</option>
+			      <option ng-value="4">Ask</option>
+			      <option ng-value="5">Show</option>
+			      <option ng-value="6">Poll</option>
+			    </select>
+			  </label>
+			  <label class="item item-input">
+			    <span class="input-label">Username</span>
+	    		<input type="text" ng-model="search.username" required>
+			  </label>
+			</form>
+		  <button class="button button-block button-dark" ng-click="goToResults(search.type, search.data)">
+	  <i class="icon ion-search"></i> Search
+	</button>
+		</div>
   </ion-content>
 </ion-view>

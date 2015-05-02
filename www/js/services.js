@@ -77,4 +77,79 @@ angular.module('starter.services', [])
     }
   };
 
-});
+})
+
+
+ .factory('searchApi', function($http) {
+    var searchRef = "http://hn.algolia.com/api/v1/"
+    var itemPath = 'items/';
+    var userPath = 'users/';
+    var searchPath = 'search?';
+    var searchByDatePath = 'search_by_date?';
+    var queryPath = 'query=';
+    var tagsPath = 'tags=';
+    var and = "&";
+
+      function getUrl(path) {
+        return searchRef + path;
+      };
+
+      function getUrlForId(path, id) {
+        return getUrl(path) + id;
+      };
+
+      function getUrlForSearch(type, text) {
+        return getUrl(searchPath) + type + text;
+      };
+
+      function getUrlForSearchByTextAndTag(text, tags) {
+        var httpLink = getUrl(searchPath) + queryPath + text + and + tagsPath + tags;
+        console.log(httpLink);
+        return httpLink;
+      };
+
+      function getUrlForSearchByTag(tags) {
+        var httpLink =getUrl(searchPath) + tagsPath + tags;
+        console.log(httpLink);
+        return httpLink;
+      };
+
+      function fetchItem(itemId) {
+        console.log("Fetch Item");
+        var httpLink =  $http.get(getUrlForId(itemPath, itemId));
+        console.log(httpLink);
+        return httpLink;
+      };
+
+      function fetchUser(userId) {
+        console.log("Fetch User");
+        return $http.get(getUrlForId(userPath, userId));
+      };
+
+      function fetchFrontPage() {
+        console.log("Fetch Front Page");
+        return $http.get(getUrlForSearchByTag("front_page"));
+      };
+
+      function fetchStory(text) {
+        console.log("Fetch Story");
+        return $http.get(getUrlForSearchByTextAndTag(text, "story"));
+      };
+
+      function service(){
+          console.log("correct service");
+          getItem: fetch
+      };
+
+      return {
+        getItem: function(itemID){
+          return fetchItem(itemID);
+        },
+        getUser: function(userName){
+          return fetchUser(userName);
+        },        
+        getFrontPage: function(){
+          return fetchFrontPage();
+        }
+      };
+  });

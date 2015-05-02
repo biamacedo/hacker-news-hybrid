@@ -1,0 +1,48 @@
+<ion-view view-title="Search Results">
+  <ion-content>
+    <ion-list>
+    	<!-- STORIES -->
+		<ion-item ng-repeat="story in resultsList" ng-show="story.type==='story'"> 
+          	<i class="icon">
+            <button class="story-score button button-small button-dark">
+              <i>{{story.points}}</i>
+            </button>
+          </i>
+          <span class="story-title item-text-wrap">
+            {{story.title}} 
+            <span class="story-time-ago subdued">
+              [{{story.created_at_i * 1000 | timeAgo}}]
+            </span>
+          </span>
+          <span ng-show="story.url" class="story-domain item-note">
+            ({{ story.url | domain }})
+          </span>
+          <i class="icon" ng-show="story.descendants">
+               <!--href="#/app/comments/{{story.id}}">-->
+            <a class="story-comments badge badge-positive" >
+               {{story.children.length}}
+            </a>
+          </i>
+    	</ion-item>
+    	<!-- COMMENTS -->
+      	<div class="card">
+		  <!--<div class="item item-divider">
+		    <span class="item-text-wrap"><b>{{story.title}}</b> by {{story.by}}</span>
+		  </div>-->
+		  <!--The next divider is to show the ask description-->
+		  <!--<div class="item item-divider" ng-show="story.text">
+		    <span class="item-text-wrap" ng-bind-html="story.text"></span>
+		  </div>-->
+		  <div class="item" ng-repeat="comment in resultsList" ng-show="comment.type === 'comment'">
+		    <span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
+	    	<span class="item-note">({{ comment.author }} at {{comment.created_at_i * 1000 | timeAgo}})</span>
+		  </div>
+		</div>
+		<!-- USERS -->
+    	<ion-item ng-repeat="user in resultsList" ng-show="user.username"> 
+          	<b>{{user.username | uppercase}}</b>
+          	<span class="item-note">(created: {{user.created_at_i * 1000 | timeAgo}})</span>
+    	</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
