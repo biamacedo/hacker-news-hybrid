@@ -17,17 +17,17 @@
             </button>
           </i>
           <span class="story-title item-text-wrap">
-            {{$index+1}} - {{story.title}} 
+            {{$index+1}} - {{story.id}} - {{story.title}} 
             <span class="story-time-ago subdued">
               [{{story.time * 1000 | timeAgo}}]
             </span>
           </span>
-          <span class="story-domain item-note">
+          <span ng-show="story.url" class="story-domain item-note">
             ({{ story.url | domain }})
           </span>
-          <i class="icon">
-            <a class="story-comments badge badge-positive" >
+          <i class="icon" ng-show="story.descendants">
                <!--href="#/app/comments/{{story.id}}">-->
+            <a class="story-comments badge badge-positive" >
                {{story.descendants}}
             </a>
           </i>
@@ -36,9 +36,9 @@
                        ng-click="share(story.title, story.url)">
             <i class="icon ion-share custom-icon"></i>
           </ion-option-button>
-          <ion-option-button class="button-clear button-positive"
+          <ion-option-button class="button-clear button-positive center-content"
                              ng-click="goToCommentsPage(story.id)">
-            <i class="icon ion-chatbox-working custom-icon"></i>
+            <i class="icon ion-chatbox-working"></i>
           </ion-option-button>
       </ion-item>
                 

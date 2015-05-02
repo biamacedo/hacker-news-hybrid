@@ -11,7 +11,8 @@
       </ion-nav-buttons>
       <ion-nav-buttons side="right">
         <!-- Right View Buttons -->
-        <!--<button class="button button-icon button-clear ion-android-refresh"></button>-->
+        <button ng-if="showSettingsHeaderButton()"class="button button-icon button-clear ion-checkmark-round"></button>
+
       </ion-nav-buttons>
     </ion-nav-bar>
     <ion-nav-view name="menuContent"></ion-nav-view>
@@ -36,6 +37,18 @@
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/newStories">
           <i class="icon ion-document-text"></i>
           New Stories
+        </ion-item>
+        <ion-item class="item-icon-left" nav-clear menu-close href="#">
+          <i class="icon ion-help"></i>
+          Asks
+        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#">
+          <i class="icon ion-checkmark-circled"></i>
+          Polls
+        </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close href="#">
+          <i class="icon ion-search"></i>
+          Search
         </ion-item>
         <ion-item class="item-icon-left" nav-clear menu-close href="#/app/settings">
           <i class="icon ion-android-settings"></i>

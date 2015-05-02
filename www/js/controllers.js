@@ -187,31 +187,33 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SettingsCtrl', function($scope) {
+.controller('CommentsCtrl', function($scope, $stateParams, $ionicLoading) {
+    var show = function() {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+  };
+  var hide = function(){
+    $ionicLoading.hide();
+  };
 
-})
-
-.controller('CommentsCtrl', function($scope, $stateParams) {
     var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
     var itemRef = ref.child('item');
     $scope.storyComments = [];
     $scope.story = null;
 
-    itemRef.child($stateParams.storyId).once('value', function(snapshot) {
-      story = snapshot.val();
+    var searchForComments = function localSearch(storyComments){
 
-      $scope.$apply(function () {
-        $scope.story = story;
-      });
+    if(typeof storyComments === 'undefined'){
+      return;
+    }
 
-      storyComments = story.kids;
-
-      for(var i = 0; i < storyComments.length; i++) {
+    for(var i = 0; i < storyComments.length; i++) {
         //console.log(newStories[i]);
         itemRef.child(storyComments[i]).once('value', function(snapshot) {
           var comment = snapshot.val();
 
-          //console.log(story);
+          //console.log(comment);
           // -- Using $apply to get $scope to notice changes happening on newStories array
           //$scope.$apply() takes a function or an Angular expression string, and executes it, 
           //then calls $scope.$digest() to update any bindings or watchers.
@@ -238,11 +240,106 @@ angular.module('starter.controllers', [])
             $scope.storyComments.push(comment);
           });
 
+          if(typeof comment.kids !== 'undefined'){
+              localSearch(comment.kids);
+            }
         });
       }
+    }
+    show();
+
+    itemRef.child($stateParams.storyId).once('value', function(snapshot) {
+      story = snapshot.val();
+
+      $scope.$apply(function () {
+        $scope.story = story;
+      });
+      //console.log(story);
+      storyComments = story.kids;
+
+      searchForComments(storyComments);
     });
+    hide();
+
+})
+
+.controller('SettingsCtrl', function($scope, $localstorage) {
+    var theme = 'light';
+    var startScreen = "top";
+    var externalBrowser = true;
+    $scope.theme = theme;
+    console.log("themescope: "+$scope.theme);
+    console.log("themestg: "+$localstorage.get('theme'));
+    $scope.startScreen = startScreen;
+    console.log("startScreenscope: "+$scope.startScreen);
+    console.log("startScreenstg: "+$localstorage.get('startScreen'));
+    $scope.externalBrowser = externalBrowser;
+    console.log("externalBrowserscope: "+$scope.externalBrowser);
+    console.log("externalBrowserstg: "+$localstorage.get('externalBrowser'));
+
+    if(typeof $localstorage.get('theme') !== 'undefined'){
+      theme = $localstorage.get('theme');      
+      console.log($localstorage.get('theme'));
+    }
+    if(typeof $localstorage.get('startScreen') !== 'undefined'){
+      startScreen = $localstorage.get('startScreen');
+    }
+    console.log($localstorage.get('externalBrowser'));
+    if(typeof $localstorage.get('externalBrowser') !== 'undefined'){
+      externalBrowser = $localstorage.get('externalBrowser');
+    console.log("did this");
+
+    }
+    
+    $scope.theme = theme;
+    console.log("themescope: "+$scope.theme);
+    console.log("themestg: "+$localstorage.get('theme'));
+    $scope.startScreen = startScreen;
+    console.log("startScreenscope: "+$scope.startScreen);
+    console.log("startScreenstg: "+$localstorage.get('startScreen'));
+    $scope.externalBrowser = externalBrowser;
+    console.log("externalBrowserscope: "+$scope.externalBrowser);
+    console.log("externalBrowserstg: "+$localstorage.get('externalBrowser'));
+
+  $scope.lightButton = function(){
+    theme = "light";
+    $scope.theme = theme;
+   };
+  $scope.darkButton = function(){
+    theme = "dark";
+    $scope.theme = theme;
+   };
+  $scope.blueButton = function(){
+    theme = "blue";
+    $scope.theme = theme;
+   };
+  $scope.startScreenChange = function(value){
+    startScreen = value;
+    $scope.startScreen = startScreen;
+   };
+  $scope.externalBrowserChange = function(){
+
+
+    externalBrowser = $scope.externalBrowser.checked
+    $scope.externalBrowser = externalBrowser;
+   };
+   
+
+  $scope.save = function(){
+    console.log("scope: "+$scope.theme);
+    console.log("scope: "+$scope.startScreen);
+    console.log("scope: "+$scope.externalBrowser);
+
+    $localstorage.set('theme', $scope.theme);
+    console.log($localstorage.get('theme'));
+    $localstorage.set('startScreen', $scope.startScreen);
+    console.log($localstorage.get('startScreen'));
+    $localstorage.set('externalBrowser', $scope.externalBrowser);
+    console.log($localstorage.get('externalBrowser'));
+  };
 
 })
 
 .controller('PlaylistCtrl', function($scope, $stateParams) {
 });
+

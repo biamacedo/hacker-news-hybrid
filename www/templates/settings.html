@@ -1,16 +1,42 @@
 <ion-view view-title="Settings">
 	<ion-content>
 		<div class="card">
+			<div class="item item-divider">
+		    Themes
+		  	</div>
 			<div class="item item-text-wrap">
-				Themes:
+				<div class="button-bar">
+				  <a class="button button-light" ng-click="lightButton()">Light</a>
+				  <a class="button button-dark" ng-click="darkButton()">Dark</a>
+				  <a class="button button-positive" ng-click="blueButton()">Blue</a>
+				</div>
 
 			</div>
 		</div>
 		<div class="card">
+			<div class="item item-divider">
+		    Start Screen
+		  	</div>
 			<div class="item item-text-wrap">
-				Start Screen:
-				
+				<div class="list">
+				  	<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="top" ng-change="startScreenChange('top')">Top Stories</ion-radio>
+					<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="new" ng-change="startScreenChange('new')">New Stories</ion-radio>
+					<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="ask" ng-change="startScreenChange('ask')">Asks</ion-radio>
+					<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="pol" ng-change="startScreenChange('pol')">Polls</ion-radio>		
+				</div>
 			</div>
 		</div>
+		<div class="card">
+		  <div class="item item-divider">
+		    Other Options
+		  </div>
+		  <div class="item item-text-wrap">
+		  	<ion-toggle ng-model="externalBrowser" toggle-class="toggle-balanced" ng-value=false ng-change="externalBrowserChange()">Open Links on External Browser</ion-toggle>
+		  </div>
+		</div>
+		<div class="item item-divider">
+			<button class="button button-block button-dark" ng-click="save()">Save <i class="radio-icon ion-checkmark-circled"></i></button>
+		  </div>
 	</ion-content>
+
 </ion-view>

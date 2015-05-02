@@ -2,6 +2,23 @@ angular.module('starter.services', [])
 /**
  * A simple example service that returns some data.
  */
+.factory('$localstorage', ['$window', function($window) {
+  return {
+    set: function(key, value) {
+      $window.localStorage[key] = value;
+    },
+    get: function(key, defaultValue) {
+      return $window.localStorage[key] || null;
+    },
+    setObject: function(key, value) {
+      $window.localStorage[key] = JSON.stringify(value);
+    },
+    getObject: function(key) {
+      return JSON.parse($window.localStorage[key] || '{}');
+    }
+  }
+}])
+
  .factory('fireBaseData', function($firebaseArray, $q) {
   var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
   var itemRef = ref.child('item');
