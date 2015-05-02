@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicScrollDelegate) {
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -39,6 +39,18 @@ angular.module('starter.controllers', [])
     //_system : Externaç Browser
     var ref = window.open(url, '_blank', 'location=yes'); 
     return false;
+  };
+
+  $scope.scrollExists = function() {
+    var delegate = $ionicScrollDelegate.$getByHandle('mainScroll').getScrollPosition();
+    if(typeof delegate === 'undefined'){
+      return false;
+    } else {
+      return true;
+    }
+  }
+  $scope.scrollTop = function() {
+    $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop(true);
   };
 })
 
