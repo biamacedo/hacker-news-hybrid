@@ -93,6 +93,15 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
       }
     }
   })
+  .state('app.jobStories', {
+    url: "/jobStories",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/story-list.html",
+        controller: 'JobStoriesCtrl'
+      }
+    }
+  })
   .state('app.search', {
     url: "/search",
     views: {

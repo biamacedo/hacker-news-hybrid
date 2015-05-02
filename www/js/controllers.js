@@ -397,6 +397,92 @@ angular.module('starter.controllers', [])
 
 })
 
+.controller('JobStoriesCtrl', function($scope, $state, hackerNewsApi) {
+    $scope.pageSize = 30;
+    $scope.totalItemsLoaded = 0;
+    $scope.totalItemsArray = 200; // Set on Firebase Database by Hacker News
+    $scope.viewTitle = "Show HN"; //Necessary because all lists use the same template
+    var storiesIds = [];
+
+  $scope.doRefresh = function() {
+    $scope.totalItemsLoaded = 0;
+    $scope.storyList = [];
+
+    hackerNewsApi.getJobStories()
+        .then(function (result) {
+          storiesIds = result.data;
+          console.log(storiesIds);
+
+                for (var i = 0; i < $scope.pageSize; i++) {
+                  hackerNewsApi.getItem(storiesIds[i])
+                    .then(function (result) {
+                      $scope.storyList.push(result.data);
+                      $scope.totalItemsLoaded++;
+                      //console.log($scope.totalItemsLoaded);
+                    });
+                };
+
+          // Stop the ion-refresher from spinning
+          $scope.$broadcast('scroll.refreshComplete');
+          console.log("Refresh Done");
+        });
+  };
+
+  $scope.loadMoreData = function() {
+    console.log('Loading more data!');
+
+    for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
+      && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
+      hackerNewsApi.getItem(storiesIds[i])
+        .then(function (result) {
+          $scope.storyList.push(result.data);
+          $scope.totalItemsLoaded++;
+          //console.log($scope.totalItemsLoaded);
+        });
+    };
+
+   // Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+    console.log("Refresh Done");
+  };
+
+  $scope.moreDataCanBeLoaded = function() {
+    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    //_self : WebView
+    //_blank : InAppBrowser
+    //_system : Externaç Browser
+    var ref = window.open(url, '_blank', 'location=yes'); 
+    return false;
+  };
+
+  $scope.goToCommentsPage = function(id){
+    $state.go('app.comments', {'storyId': id});
+  };
+
+  $scope.share = function(title, url) {
+        if (window.plugins && window.plugins.socialsharing) {
+            window.plugins.socialsharing.share(title,
+                'Hacker News', null, url,
+                function() {
+                    console.log("Success")
+                },
+                function (error) {
+                    console.log("Share fail " + error)
+                });
+        }
+        else console.log("Share plugin not available");
+}
+
+})
+
 .controller('CommentsCtrl', function($scope, $stateParams, $ionicLoading) {
     var show = function() {
     $ionicLoading.show({
