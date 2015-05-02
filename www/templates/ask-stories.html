@@ -1,4 +1,4 @@
-<ion-view view-title="Top Stories">
+<ion-view view-title="Ask HN">
   <ion-content>
     <ion-refresher pulling-text="Pull To Refresh..."
       on-refresh="doRefresh()"
@@ -9,7 +9,7 @@
       <!--http://www.iperform.nl/en/blog/post/cordova-open-external-link-->
 
       <ion-item class="item item-icon-left item-icon-right"
-         ng-repeat="story in topStories"
+         ng-repeat="story in askStories"
          ng-click="openBrowser(story.url)"> <!--href="{{story.url}}" target="_blank" -->
           <i class="icon">
             <button class="story-score button button-small button-dark">

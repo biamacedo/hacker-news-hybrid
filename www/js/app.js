@@ -75,6 +75,15 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
       }
     }
   })
+  .state('app.askStories', {
+    url: "/askStories",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/ask-stories.html",
+        controller: 'AskStoriesCtrl'
+      }
+    }
+  })
   .state('app.search', {
     url: "/search",
     views: {
