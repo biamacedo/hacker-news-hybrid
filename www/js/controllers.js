@@ -53,90 +53,63 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('TopStoriesCtrl', function($scope, $state, $firebaseArray) { // fireBaseData removed
+.controller('TopStoriesCtrl', function($scope, $state, hackerNewsApi) { // fireBaseData removed
     var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
     var itemRef = ref.child('item');
     $scope.pageSize = 20;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 500; // Set on Firebase Database by Hacker News
+    var topStoriesIds = [];
 
-  $scope.retrieveStoriesID = function(callback){
-    $scope.storiesIds = [];
+  $scope.retrieveStoriesID = function(){
 
-    ref.child('topstories').once('value', function(snapshot) {
-      topStories = snapshot.val();
-      //console.log(topStories);
-      callback(topStories);
-      //console.log($scope.storiesIds);
-
-    });
   };
 
   $scope.doRefresh = function() {
     $scope.totalItemsLoaded = 0;
+    $scope.topStories = [];
 
-    $scope.retrieveStoriesID( function(storyIDs){
+    hackerNewsApi.getTopStories()
+        .then(function (result) {
+          topStoriesIds = result.data;
+          console.log(topStoriesIds);
 
-      $scope.topStories = [];
-      //console.log(storyIDs);
-      // storyIDs.length
-      for(var i = 0; i < $scope.pageSize && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
-        //console.log(storyIDs[i]);
-        itemRef.child(storyIDs[i]).once('value', function(snapshot) {
-          var story = snapshot.val();
+                for (var i = 0; i < $scope.pageSize; i++) {
+                  hackerNewsApi.getItem(topStoriesIds[i])
+                    .then(function (result) {
+                      $scope.topStories.push(result.data);
+                      $scope.totalItemsLoaded++;
+                      //console.log($scope.totalItemsLoaded);
+                    });
+                };
 
-          //console.log(story);
-            // -- Using $apply to get $scope to notice changes happening on topStories array
-            //$scope.$apply() takes a function or an Angular expression string, and executes it, 
-            //then calls $scope.$digest() to update any bindings or watchers.
-            $scope.$apply(function () {
-              $scope.topStories.push(story);
-              var totalLoaded = $scope.totalItemsLoaded;
-              $scope.totalItemsLoaded = totalLoaded +1;
-              //console.log($scope.totalItemsLoaded);
-            });
-
-          });
-      }
-
-      // Stop the ion-refresher from spinning
-      $scope.$broadcast('scroll.refreshComplete');
-    });
+          // Stop the ion-refresher from spinning
+          $scope.$broadcast('scroll.refreshComplete');
+          console.log("Refresh Done");
+        });
   };
 
   $scope.loadMoreData = function() {
     console.log('Loading more data!');
-    //$timeout(function() {
 
-    $scope.retrieveStoriesID( function(storyIDs){
-      console.log(storyIDs);
-      // storyIDs.length
-      for(var i = $scope.totalItemsLoaded; i < $scope.pageSize && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
-        //console.log(storyIDs[i]);
-        itemRef.child(storyIDs[i]).once('value', function(snapshot) {
-          var story = snapshot.val();
+    for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize); i++) {
+      hackerNewsApi.getItem(topStoriesIds[i])
+        .then(function (result) {
+          $scope.topStories.push(result.data);
+          $scope.totalItemsLoaded++;
+          //console.log($scope.totalItemsLoaded);
+        });
+    };
 
-          //console.log(story);
-            // -- Using $apply to get $scope to notice changes happening on topStories array
-            //$scope.$apply() takes a function or an Angular expression string, and executes it, 
-            //then calls $scope.$digest() to update any bindings or watchers.
-            $scope.$apply(function () {
-              $scope.topStories.push(story);
-              var totalLoaded = $scope.totalItemsLoaded;
-              $scope.totalItemsLoaded = totalLoaded +1;
-              //console.log($scope.totalItemsLoaded);
-            });
-
-          });
-      }
-      $scope.$apply(function () {
-        $scope.$broadcast('scroll.infiniteScrollComplete');
-        $scope.$broadcast('scroll.resize');
-      });
-    });
-
-  //}, 10000);
   };
+
+  $scope.moreDataCanBeLoaded = function() {
+    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
