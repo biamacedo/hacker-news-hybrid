@@ -85,7 +85,39 @@ angular.module('starter.services', [])
     }
   };
 })
-  
+
+.service('starterScreen', function($localstorage) {
+  return{
+    getStartScreenPath : function(){
+      var option = $localstorage.get('startScreen')
+      var path;
+      switch(option){
+        case 'top':
+          path = "/app/topStories";
+          break;
+        case 'new':
+          path = "/app/newStories";
+          break;
+        case 'ask':
+          path = "/app/askStories";
+          break;
+        case 'show':
+          path = "/app/showStories";
+          break;
+        case 'poll':
+          path = "/app/topStories";
+          break;
+        case 'jobs':
+          path = "/app/jobStories";
+          break;
+        default:
+          path = "/app/topStories";
+          break;
+      }
+      return path;
+    }
+  };
+}) 
 
 .factory('hackerNewsApi', function($http) {
     var ref = "https://hacker-news.firebaseio.com/v0/"
