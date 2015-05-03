@@ -6,7 +6,7 @@
 		<!--<hr style="height:5pt; visibility:hidden;" />-->
 		<p>Created: {{story.time * 1000 | timeAgo}}</p>
 	    <span class="item-text-wrap"><b>{{story.title}}</b></span>
-	    <a class="badge badge-positive" href="#/app/user/{{story.by}}" style="text-decoration: none;margin-right:-20px;margin-top:-2px;">
+	    <a class="badge badge-positive" href="#/app/user/{{story.by}}" style="text-decoration: none;margin-right:-20px;">
 			{{story.by}}
 		</a> 
 	  </div>
@@ -14,16 +14,21 @@
 	  <div class="item item-divider" ng-show="story.text">
 	    <span class="item-text-wrap" ng-bind-html="story.text"></span>
 	  </div>
-	  <div class="item" ng-repeat="comment in storyComments" style="">
+	  <div class="item" ng-repeat="comment in storyComments" style="text-align:left;padding-left:0px;background-color:blue;">
 
-	  	<div style="background-color:#F5F5F5;position:absolute;width:20px;height:105%;margin-top:-20px;margin-left:-20px;"></div>
-	  	<div style="margin-left:20px;">
+	  	<div style="background-color:#F5F5F5;width:20px;display:inline-block;height:100%;padding-top:0px;height:100%;">test</div>
+	  	<div style="background-color:#F5F5F5;width:20px;display:inline-block;height:100%;padding-top:0px;height:100%;">test</div>
+	  	<div style="background-color:red;display:inline-block;height:100%;">
 	  		<a class="badge badge-positive" href="#/app/user/{{comment.by}}" style="text-decoration: none;margin-top:-7px;margin-right:-20px;">
 			{{comment.by}} | {{comment.time * 1000 | timeAgo}}
 			</a>
 			<hr style="height:5pt; visibility:hidden;" />
-		    <span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
-		</div>
+		    <div style=";padding-left:20px;padding-right:30px;height:100%;">
+		    	<span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
+		    </div>
+
+	  	</div>
+
 	  </div>
 	</div>
                 
