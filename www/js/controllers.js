@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicScrollDelegate, externalBrowser) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, externalBrowser, $ionicScrollDelegate) {
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -39,12 +39,14 @@ angular.module('starter.controllers', [])
 
   $scope.scrollExists = function() {
     var template = document.getElementById("scrollList");
+    console.log(template);
     if(template === null){
       return false;
     } else {
       return true;
     }
-  }
+  };
+
   $scope.scrollTop = function() {
     $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop(true);
   };
