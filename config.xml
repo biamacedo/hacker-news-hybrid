@@ -28,6 +28,14 @@
     <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser"/>
     <param name="ios-package" value="CDVInAppBrowser"/>
   </feature>
+  <!-- for iOS -->
+<feature name="Toast">
+  <param name="ios-package" value="Toast" />
+</feature>
+<!-- for Android -->
+<feature name="Toast">
+  <param name="android-package" value="nl.xservices.plugins.Toast" />
+</feature>
   <platform name="android">
     <icon src="resources/android/icon/drawable-ldpi/ic_launcher.png" density="ldpi"/>
     <icon src="resources/android/icon/drawable-mdpi/ic_launcher.png" density="mdpi"/>

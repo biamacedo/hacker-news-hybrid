@@ -37,6 +37,24 @@ angular.module('starter.services', [])
   };
 })
 
+.service('toastProvider', function() {
+  return{
+    //show(message, duration, position)
+    //  duration: 'short', 'long'
+    //  position: 'top', 'center', 'bottom'
+    showToast : function(text, duration, location){
+        if (window.plugins && window.plugins.socialsharing) {
+            window.plugins.toast.show(text, duration, location, function(error){
+                console.log('Toast Success')
+            }, function(b){
+              alert('Toast Error: ' + error)
+            })
+        }
+        else console.log("Toast plugin not available");
+      }
+  };
+})
+
 .service('externalBrowser', function($localstorage) {
   return{
     open : function(url){

@@ -42,7 +42,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.scrollExists = function() {
-    var template = document.getElementById("storyList");
+    var template = document.getElementById("scrollList");
     if(template === null){
       return false;
     } else {
@@ -461,25 +461,23 @@ angular.module('starter.controllers', [])
       });
 })
 
-.controller('SettingsCtrl', function($scope, $localstorage) {
+.controller('SettingsCtrl', function($scope, $localstorage, toastProvider) {
     var theme = 'light';
     var startScreen = "top";
     var externalBrowser = true;
 
-    if(typeof $localstorage.get('theme') !== 'undefined'){
       theme = $localstorage.get('theme');      
       console.log($localstorage.get('theme'));
-    }
-    if(typeof $localstorage.get('startScreen') !== 'undefined'){
+
       startScreen = $localstorage.get('startScreen');
       var radio = document.getElementById( startScreen );
       radio.checked = true;
-    }
-    if(typeof $localstorage.get('externalBrowser') !== 'undefined'){
-      document.getElementById( 'externalBrowser' ).checked = $localstorage.get('externalBrowser');
-    console.log("did this");
 
-    }
+      if($localstorage.get('externalBrowser') === 'true'){
+        document.getElementById( 'externalBrowser' ).checked = true;
+      } else {
+        document.getElementById( 'externalBrowser' ).checked = false;
+      };
 
   $scope.lightButton = function(){
     theme = "light";
@@ -508,6 +506,7 @@ angular.module('starter.controllers', [])
     console.log($localstorage.get('startScreen'));
     $localstorage.set('externalBrowser', externalBrowser);
     console.log($localstorage.get('externalBrowser'));
+    toastProvider.showToast("Settings Saved!", "short", "center")
   };
 
 })
