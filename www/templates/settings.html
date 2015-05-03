@@ -19,10 +19,48 @@
 		  	</div>
 			<div class="item item-text-wrap">
 				<div class="list">
-				  	<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="top" ng-change="startScreenChange('top')">Top Stories</ion-radio>
-					<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="new" ng-change="startScreenChange('new')">New Stories</ion-radio>
-					<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="ask" ng-change="startScreenChange('ask')">Asks</ion-radio>
-					<ion-radio icon="ion-checkmark-circled" ng-model="startScreen" value="pol" ng-change="startScreenChange('pol')">Polls</ion-radio>		
+					  <label class="item item-radio">
+					    <input type="radio" name="startScreen" id="top" value="top">
+					    <div class="item-content">
+					      Top Stories
+					    </div>
+					    <i class="radio-icon ion-checkmark-circled"></i>
+					  </label>
+					  <label class="item item-radio">
+					    <input type="radio" name="startScreen" id="new" value="new">
+					    <div class="item-content">
+					      New Stories
+					    </div>
+					    <i class="radio-icon ion-checkmark-circled"></i>
+					  </label>
+					  <label class="item item-radio">
+					    <input type="radio" name="startScreen" id="ask" value="ask">
+					    <div class="item-content">
+					      Ask HNs
+					    </div>
+					    <i class="radio-icon ion-checkmark-circled"></i>
+					  </label>
+					  <label class="item item-radio">
+					    <input type="radio" name="startScreen" id="show" value="show">
+					    <div class="item-content">
+					      Show HNs
+					    </div>
+					    <i class="radio-icon ion-checkmark-circled"></i>
+					  </label>
+					  <label class="item item-radio">
+					    <input type="radio" name="startScreen" id="poll" value="poll">
+					    <div class="item-content">
+					      Polls
+					    </div>
+					    <i class="radio-icon ion-checkmark-circled"></i>
+					  </label>
+					  <label class="item item-radio">
+					    <input type="radio" name="startScreen" id="job" value="job">
+					    <div class="item-content">
+					      Jobs
+					    </div>
+					    <i class="radio-icon ion-checkmark-circled"></i>
+					  </label>
 				</div>
 			</div>
 		</div>
@@ -31,7 +69,17 @@
 		    Other Options
 		  </div>
 		  <div class="item item-text-wrap">
-		  	<ion-toggle ng-model="externalBrowser" toggle-class="toggle-balanced" ng-value=false ng-change="externalBrowserChange()">Open Links on External Browser</ion-toggle>
+			<ul class="list">
+			  <li class="item item-toggle">
+			     Open Links on External Browser
+			     <label class="toggle toggle-balanced">
+			       <input type="checkbox" id="externalBrowser">
+			       <div class="track">
+			         <div class="handle"></div>
+			       </div>
+			     </label>
+			  </li>
+			</ul>
 		  </div>
 		</div>
 		<div class="item item-divider">

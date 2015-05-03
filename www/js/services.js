@@ -19,6 +19,49 @@ angular.module('starter.services', [])
   }
 }])
 
+.factory('socialSharing', function() {
+  return{
+    share : function(title, url){
+        if (window.plugins && window.plugins.socialsharing) {
+            window.plugins.socialsharing.share(title,
+                'Hacker News', null, url,
+                function() {
+                    console.log("Success")
+                },
+                function (error) {
+                    console.log("Share fail " + error)
+                });
+        }
+        else console.log("Share plugin not available");
+      }
+  };
+})
+
+.factory('externalBrowser', function($localstorage) {
+  return{
+    open : function(url){
+        var option = $localstorage.get('externalBrowser');
+        console.log(option);
+        var optionString;
+        switch(option){
+          case 'true':
+            optionString = '_system';
+            break;
+          default:
+            optionString = '_blank';
+            break;
+
+        }
+        //_self : WebView
+        //_blank : InAppBrowser
+        //_system : External Browser
+        console.log(optionString);
+        var ref = window.open(url, optionString, 'location=yes'); 
+        return false;
+      }
+  };
+})
+
 .factory('hackerNewsApi', function($http) {
     var ref = "https://hacker-news.firebaseio.com/v0/"
     var itemPath = 'item/';

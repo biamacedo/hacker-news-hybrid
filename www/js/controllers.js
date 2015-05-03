@@ -42,8 +42,8 @@ angular.module('starter.controllers', [])
   };
 
   $scope.scrollExists = function() {
-    var delegate = $ionicScrollDelegate.$getByHandle('mainScroll').getScrollPosition();
-    if(typeof delegate === 'undefined'){
+    var template = document.getElementById("storyList");
+    if(template === null){
       return false;
     } else {
       return true;
@@ -65,7 +65,7 @@ angular.module('starter.controllers', [])
   ];
 })
 
-.controller('TopStoriesCtrl', function($scope, $state, hackerNewsApi) {
+.controller('TopStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 500; // Set on Firebase Database by Hacker News
@@ -124,11 +124,7 @@ angular.module('starter.controllers', [])
 
   //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
-    //_self : WebView
-    //_blank : InAppBrowser
-    //_system : Externaç Browser
-    var ref = window.open(url, '_blank', 'location=yes'); 
-    return false;
+    externalBrowser.open(url);
   };
 
   $scope.goToCommentsPage = function(id){
@@ -136,22 +132,12 @@ angular.module('starter.controllers', [])
   };
 
   $scope.share = function(title, url) {
-        if (window.plugins && window.plugins.socialsharing) {
-            window.plugins.socialsharing.share(title,
-                'Hacker News', null, url,
-                function() {
-                    console.log("Success")
-                },
-                function (error) {
-                    console.log("Share fail " + error)
-                });
-        }
-        else console.log("Share plugin not available");
-}
+    socialSharing.share(title, url);
+  }
 
 })
 
-.controller('NewStoriesCtrl', function($scope, $state, hackerNewsApi) {
+.controller('NewStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 500; // Set on Firebase Database by Hacker News
@@ -210,11 +196,7 @@ angular.module('starter.controllers', [])
 
   //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
-    //_self : WebView
-    //_blank : InAppBrowser
-    //_system : Externaç Browser
-    var ref = window.open(url, '_blank', 'location=yes'); 
-    return false;
+    externalBrowser.open(url);
   };
 
   $scope.goToCommentsPage = function(id){
@@ -222,22 +204,12 @@ angular.module('starter.controllers', [])
   };
 
   $scope.share = function(title, url) {
-        if (window.plugins && window.plugins.socialsharing) {
-            window.plugins.socialsharing.share(title,
-                'Hacker News', null, url,
-                function() {
-                    console.log("Success")
-                },
-                function (error) {
-                    console.log("Share fail " + error)
-                });
-        }
-        else console.log("Share plugin not available");
-}
+    socialSharing.share(title, url);
+  }
 
 })
 
-.controller('AskStoriesCtrl', function($scope, $state, hackerNewsApi) {
+.controller('AskStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 200; // Set on Firebase Database by Hacker News
@@ -296,11 +268,7 @@ angular.module('starter.controllers', [])
 
   //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
-    //_self : WebView
-    //_blank : InAppBrowser
-    //_system : Externaç Browser
-    var ref = window.open(url, '_blank', 'location=yes'); 
-    return false;
+    externalBrowser.open(url);
   };
 
   $scope.goToCommentsPage = function(id){
@@ -308,22 +276,12 @@ angular.module('starter.controllers', [])
   };
 
   $scope.share = function(title, url) {
-        if (window.plugins && window.plugins.socialsharing) {
-            window.plugins.socialsharing.share(title,
-                'Hacker News', null, url,
-                function() {
-                    console.log("Success")
-                },
-                function (error) {
-                    console.log("Share fail " + error)
-                });
-        }
-        else console.log("Share plugin not available");
-}
+    socialSharing.share(title, url);
+  }
 
 })
 
-.controller('ShowStoriesCtrl', function($scope, $state, hackerNewsApi) {
+.controller('ShowStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 200; // Set on Firebase Database by Hacker News
@@ -382,11 +340,7 @@ angular.module('starter.controllers', [])
 
   //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
-    //_self : WebView
-    //_blank : InAppBrowser
-    //_system : Externaç Browser
-    var ref = window.open(url, '_blank', 'location=yes'); 
-    return false;
+    externalBrowser.open(url);
   };
 
   $scope.goToCommentsPage = function(id){
@@ -394,22 +348,12 @@ angular.module('starter.controllers', [])
   };
 
   $scope.share = function(title, url) {
-        if (window.plugins && window.plugins.socialsharing) {
-            window.plugins.socialsharing.share(title,
-                'Hacker News', null, url,
-                function() {
-                    console.log("Success")
-                },
-                function (error) {
-                    console.log("Share fail " + error)
-                });
-        }
-        else console.log("Share plugin not available");
-}
+        socialSharing.share(title, url);
+  }
 
 })
 
-.controller('JobStoriesCtrl', function($scope, $state, hackerNewsApi) {
+.controller('JobStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 0; // Total Array Size
@@ -469,30 +413,16 @@ angular.module('starter.controllers', [])
 
   //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
-    //_self : WebView
-    //_blank : InAppBrowser
-    //_system : Externaç Browser
-    var ref = window.open(url, '_blank', 'location=yes'); 
-    return false;
+    externalBrowser.open(url);
   };
 
   $scope.goToCommentsPage = function(id){
     $state.go('app.comments', {'storyId': id});
   };
 
-  $scope.share = function(title, url) {
-        if (window.plugins && window.plugins.socialsharing) {
-            window.plugins.socialsharing.share(title,
-                'Hacker News', null, url,
-                function() {
-                    console.log("Success")
-                },
-                function (error) {
-                    console.log("Share fail " + error)
-                });
-        }
-        else console.log("Share plugin not available");
-}
+  $scope.share = function(title, url){
+    socialSharing.share(title, url);
+  }
 
 })
 
@@ -598,15 +528,6 @@ angular.module('starter.controllers', [])
     var theme = 'light';
     var startScreen = "top";
     var externalBrowser = true;
-    $scope.theme = theme;
-    console.log("themescope: "+$scope.theme);
-    console.log("themestg: "+$localstorage.get('theme'));
-    $scope.startScreen = startScreen;
-    console.log("startScreenscope: "+$scope.startScreen);
-    console.log("startScreenstg: "+$localstorage.get('startScreen'));
-    $scope.externalBrowser = externalBrowser;
-    console.log("externalBrowserscope: "+$scope.externalBrowser);
-    console.log("externalBrowserstg: "+$localstorage.get('externalBrowser'));
 
     if(typeof $localstorage.get('theme') !== 'undefined'){
       theme = $localstorage.get('theme');      
@@ -614,58 +535,41 @@ angular.module('starter.controllers', [])
     }
     if(typeof $localstorage.get('startScreen') !== 'undefined'){
       startScreen = $localstorage.get('startScreen');
+      var radio = document.getElementById( startScreen );
+      radio.checked = true;
     }
-    console.log($localstorage.get('externalBrowser'));
     if(typeof $localstorage.get('externalBrowser') !== 'undefined'){
-      externalBrowser = $localstorage.get('externalBrowser');
+      document.getElementById( 'externalBrowser' ).checked = $localstorage.get('externalBrowser');
     console.log("did this");
 
     }
-    
-    $scope.theme = theme;
-    console.log("themescope: "+$scope.theme);
-    console.log("themestg: "+$localstorage.get('theme'));
-    $scope.startScreen = startScreen;
-    console.log("startScreenscope: "+$scope.startScreen);
-    console.log("startScreenstg: "+$localstorage.get('startScreen'));
-    $scope.externalBrowser = externalBrowser;
-    console.log("externalBrowserscope: "+$scope.externalBrowser);
-    console.log("externalBrowserstg: "+$localstorage.get('externalBrowser'));
 
   $scope.lightButton = function(){
     theme = "light";
-    $scope.theme = theme;
    };
   $scope.darkButton = function(){
     theme = "dark";
-    $scope.theme = theme;
    };
   $scope.blueButton = function(){
     theme = "blue";
-    $scope.theme = theme;
-   };
-  $scope.startScreenChange = function(value){
-    startScreen = value;
-    $scope.startScreen = startScreen;
-   };
-  $scope.externalBrowserChange = function(){
-
-
-    externalBrowser = $scope.externalBrowser.checked
-    $scope.externalBrowser = externalBrowser;
    };
    
 
   $scope.save = function(){
-    console.log("scope: "+$scope.theme);
-    console.log("scope: "+$scope.startScreen);
-    console.log("scope: "+$scope.externalBrowser);
+    var radios = document.getElementsByName( 'startScreen' );
+    for( i = 0; i < radios.length; i++ ) {
+        if( radios[i].checked ) {
+            console.log("found="+radios[i].value)
+            startScreen = radios[i].value;
+        }
+    }
+    externalBrowser = document.getElementById( 'externalBrowser' ).checked;
 
-    $localstorage.set('theme', $scope.theme);
+    $localstorage.set('theme', theme);
     console.log($localstorage.get('theme'));
-    $localstorage.set('startScreen', $scope.startScreen);
+    $localstorage.set('startScreen', startScreen);
     console.log($localstorage.get('startScreen'));
-    $localstorage.set('externalBrowser', $scope.externalBrowser);
+    $localstorage.set('externalBrowser', externalBrowser);
     console.log($localstorage.get('externalBrowser'));
   };
 
