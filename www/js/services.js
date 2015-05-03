@@ -2,7 +2,7 @@ angular.module('starter.services', [])
 /**
  * A simple example service that returns some data.
  */
-.factory('$localstorage', ['$window', function($window) {
+.service('$localstorage', ['$window', function($window) {
   return {
     set: function(key, value) {
       $window.localStorage[key] = value;
@@ -19,7 +19,7 @@ angular.module('starter.services', [])
   }
 }])
 
-.factory('socialSharing', function() {
+.service('socialSharing', function() {
   return{
     share : function(title, url){
         if (window.plugins && window.plugins.socialsharing) {
@@ -37,7 +37,7 @@ angular.module('starter.services', [])
   };
 })
 
-.factory('externalBrowser', function($localstorage) {
+.service('externalBrowser', function($localstorage) {
   return{
     open : function(url){
         var option = $localstorage.get('externalBrowser');
@@ -61,6 +61,31 @@ angular.module('starter.services', [])
       }
   };
 })
+
+.service('commentParser', function() {
+  return{
+    parse : function(text){
+      var fullText ="";
+      if(typeof text === 'string'){
+          if (text.indexOf("<p>") > -1){
+          var subText = text.slice(0, text.indexOf("<p>"));
+          var subText = "<p>" + subText + "</p>";
+          fullText = subText + text.slice(text.indexOf("<p>"), text.length);
+        } else {
+          var subText = text
+          var subText = "<p>" + subText + "</p>";
+          fullText = subText;
+        }
+      }
+
+      //Code for asks, to show their description
+      var tag = document.createElement('div');
+      tag.innerHTML = fullText;
+      return tag.innerHTML;
+    }
+  };
+})
+  
 
 .factory('hackerNewsApi', function($http) {
     var ref = "https://hacker-news.firebaseio.com/v0/"

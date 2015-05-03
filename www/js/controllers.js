@@ -426,102 +426,39 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('CommentsCtrl', function($scope, $stateParams, $ionicLoading) {
-    var show = function() {
-    $ionicLoading.show({
-      template: 'Loading...'
-    });
-  };
-  var hide = function(){
-    $ionicLoading.hide();
-  };
-
-    var ref = new Firebase("http://hacker-news.firebaseio.com/v0/");
-    var itemRef = ref.child('item');
+.controller('CommentsCtrl', function($scope, $stateParams, hackerNewsApi, commentParser) {
     $scope.storyComments = [];
     $scope.story = null;
 
-    var searchForComments = function localSearch(storyComments){
-
-    if(typeof storyComments === 'undefined'){
-      return;
-    }
-
-    for(var i = 0; i < storyComments.length; i++) {
-        //console.log(newStories[i]);
-        itemRef.child(storyComments[i]).once('value', function(snapshot) {
-          var comment = snapshot.val();
-
-          //console.log(comment);
-          // -- Using $apply to get $scope to notice changes happening on newStories array
-          //$scope.$apply() takes a function or an Angular expression string, and executes it, 
-          //then calls $scope.$digest() to update any bindings or watchers.
-          $scope.$apply(function () {
-            //Code to format html of comments, because the first paragraph does not contain <p>
-            var text = comment.text;
-            var fullText ="";
-            if(typeof text === 'string'){
-                if (text.indexOf("<p>") > -1){
-                var subText = text.slice(0, text.indexOf("<p>"));
-                var subText = "<p>" + subText + "</p>";
-                fullText = subText + text.slice(text.indexOf("<p>"), text.length);
-              } else {
-                var subText = text
-                var subText = "<p>" + subText + "</p>";
-                fullText = subText;
-              }
-            }
-
-            var tag = document.createElement('div');
-            tag.innerHTML = fullText;
-       
-            comment.text = tag.innerHTML;
-
-            $scope.storyComments.push(comment);
-          });
-
-          if(typeof comment.kids !== 'undefined'){
+    var getReplyComments = function localSearch(storyComments){
+      for(var i = 0; i < storyComments.length; i++) {
+        hackerNewsApi.getItem(storyComments[i])
+          .then(function (result) {
+            var comment = result.data;
+            if(comment.kids){
+              console.log("Going to "+comment.by+ " kids");
               localSearch(comment.kids);
             }
-        });
-      }
-    }
-    show();
+            if(comment.deleted !== true){ // some comments can be deleted by HN / marked as [flagged]
+              console.log(comment.by);
+              comment.text = commentParser.parse(comment.text)
+              $scope.storyComments.push(comment);
+            }
+          });
 
-    itemRef.child($stateParams.storyId).once('value', function(snapshot) {
-      story = snapshot.val();
+      };
+    };
 
-      var text = story.text;
-      var fullText ="";
-      if(typeof text === 'string'){
-          if (text.indexOf("<p>") > -1){
-          var subText = text.slice(0, text.indexOf("<p>"));
-          var subText = "<p>" + subText + "</p>";
-          fullText = subText + text.slice(text.indexOf("<p>"), text.length);
-        } else {
-          var subText = text
-          var subText = "<p>" + subText + "</p>";
-          fullText = subText;
-        }
-      }
-
-      //Code for asks, to show their description
-      var tag = document.createElement('div');
-      tag.innerHTML = fullText;
-      story.text = tag.innerHTML;
-
-      $scope.$apply(function () {
+    hackerNewsApi.getItem($stateParams.storyId)
+      .then(function (result) {
+        var story = result.data;
+        console.log(story.id);
         $scope.story = story;
+        if(story.descendants){
+          storyComments = story.kids;
+          getReplyComments(storyComments);
+        }
       });
-      //console.log(story)
-
-
-      storyComments = story.kids;
-
-      searchForComments(storyComments);
-    });
-    hide();
-
 })
 
 .controller('SettingsCtrl', function($scope, $localstorage) {
