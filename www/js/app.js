@@ -46,6 +46,16 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     controller: 'AppCtrl'
   })
 
+  .state('app.user', {
+    url: "/user/:userId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/user.html",
+        controller: 'UserCtrl'
+      }
+    }
+  })
+
   .state('app.topStories', {
     url: "/topStories",
     views: {

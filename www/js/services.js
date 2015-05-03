@@ -140,7 +140,7 @@ angular.module('starter.services', [])
 .factory('hackerNewsApi', function($http) {
     var ref = "https://hacker-news.firebaseio.com/v0/"
     var itemPath = 'item/';
-    var userPath = 'users/';
+    var userPath = 'user/';
     var jsonEnd = '.json';
     var topStoriesPath = 'topstories';
     var newStoriesPath = 'newstories';
@@ -167,6 +167,9 @@ angular.module('starter.services', [])
     },
     getItem: function(itemID){
       return $http.get(ref + itemPath + itemID + jsonEnd);
+    },
+    getUser: function(userID){
+      return $http.get(ref + userPath + userID + jsonEnd);
     }
   };
 

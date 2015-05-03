@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, externalBrowser, $ionicScrollDelegate) {
+.controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, externalBrowser, $ionicScrollDelegate) {
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -24,6 +24,11 @@ angular.module('starter.controllers', [])
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
+
+    $http.get("https://news.ycombinator.com/login")
+      .then(function(result){
+          console.log(result);
+      })
 
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
@@ -590,6 +595,22 @@ angular.module('starter.controllers', [])
         $scope.getFrontPage();
         break;
     };
+})
+
+.controller('UserCtrl', function($scope, $stateParams, hackerNewsApi) {
+  hackerNewsApi.getUser($stateParams.userId)
+    .error(function (result) {
+      console.log(result.error);
+    })
+    .then(function (result) {
+
+      console.log(result);
+      var user = result.data;
+      console.log(user.id);
+      $scope.user = user;
+    });
+
+
 })
 .controller('AboutCtrl', function($scope) {
 });

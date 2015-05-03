@@ -1,0 +1,37 @@
+<ion-view view-title="User Profile">
+  <ion-content id="scrollList" delegate-handle="mainScroll">
+
+  	<!-- User Validation -->
+  	<div class="card" ng-hide="user">
+	  	<div class="item item-divider">
+		    <center><h2 class="assertive"><i class="icon ion-close-circled"></i> User Not Found</h2><center>
+		</div>
+	</div>
+	<!-- User -->
+    <div class="card" ng-show="user">
+       <div class="item item-divider">
+	    <h2><i class="icon ion-android-person"></i>  {{user.id}}</h2>
+	    <p>Created: {{user.created * 1000 | timeAgo}}</p>
+	    <i class="icon">
+            <a class="badge badge-positive" >
+               Karma: {{user.karma}}
+            </a>
+          </i>
+	  </div>
+	  <div class="item tabs tabs-secondary tabs-icon-left">
+	    <a class="tab-item" href="#">
+	      <i class="icon ion-pricetags"></i>
+	      Threads
+	    </a>
+	    <a class="tab-item" href="#">
+	      <i class="icon ion-chatbox-working"></i>
+	      Comments
+	    </a>
+	  </div>
+	  <div class="item" ng-show="user.about">
+	    <span class="item-text-wrap" ng-bind-html="user.about"></span>
+	  </div>
+	</div>
+                
+  </ion-content>
+</ion-view>
