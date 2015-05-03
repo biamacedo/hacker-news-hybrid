@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicScrollDelegate) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicScrollDelegate, externalBrowser) {
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -34,11 +34,7 @@ angular.module('starter.controllers', [])
 
     //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
-    //_self : WebView
-    //_blank : InAppBrowser
-    //_system : Externaç Browser
-    var ref = window.open(url, '_blank', 'location=yes'); 
-    return false;
+    externalBrowser.open(url);
   };
 
   $scope.scrollExists = function() {
