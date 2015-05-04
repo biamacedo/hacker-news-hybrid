@@ -608,10 +608,12 @@ angular.module('starter.controllers', [])
       console.log(user.id);
       $scope.user = user;
     });
+
 })
 
-.controller('UserCommentsCtrl', function($scope, $stateParams, hackerNewsApi) {
-  
+.controller('UserCommentsCtrl', function($scope, $stateParams, hackerNewsApi, commentParser) {
+  $scope.storyComments = [];
+
   hackerNewsApi.getUser($stateParams.userId)
     .error(function (result) {
       console.log(result.error);
@@ -622,6 +624,21 @@ angular.module('starter.controllers', [])
       var user = result.data;
       console.log(user.id);
       $scope.user = user;
+
+      for(var i = 0; i < user.submitted.length; i++) {
+        hackerNewsApi.getItem(user.submitted[i])
+          .then(function (result) {
+            var comment = result.data;
+
+
+            if(comment.deleted !== true && comment.type === "comment"){ // some comments can be deleted by HN / marked as [flagged]
+              console.log(comment.by);
+              comment.text = commentParser.parse(comment.text)
+              $scope.storyComments.push(comment);
+            }
+          });
+
+      };
     });
 
 })

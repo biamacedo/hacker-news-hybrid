@@ -56,22 +56,22 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     }
   })
 
+  .state('app.userComments', {
+    url: "/user/comments/:userId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/user-comments.html",
+        controller: 'UserCommentsCtrl'
+      }
+    }
+  })
+
   .state('app.topStories', {
     url: "/topStories",
     views: {
       'menuContent': {
         templateUrl: "templates/story-list.html",
         controller: 'TopStoriesCtrl'
-      }
-    }
-  })
-
-  .state('app.comments', {
-    url: "/comments/:storyId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/comments.html",
-        controller: 'CommentsCtrl'
       }
     }
   })
@@ -112,6 +112,17 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
       }
     }
   })
+
+  .state('app.comments', {
+    url: "/comments/:storyId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/comments.html",
+        controller: 'CommentsCtrl'
+      }
+    }
+  })
+
   .state('app.search', {
     url: "/search",
     views: {

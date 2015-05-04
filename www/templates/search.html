@@ -16,7 +16,7 @@
 			      <option ng-value="3">User</option>
 			      <option ng-value="4">Ask</option>
 			      <option ng-value="5">Show</option>
-			      <option ng-value="6">Poll</option>
+			      <option ng-value="6">Jobs</option>
 			    </select>
 			  </label>
 			  <label class="item item-input">
@@ -24,9 +24,9 @@
 	    		<input type="text" ng-model="search.username" required>
 			  </label>
 			</form>
-		  <button class="button button-block button-positive" ng-click="goToResults(search.type, search.data)">
-	  <i class="icon ion-search"></i> Search
-	</button>
+		  	<button class="button button-block button-positive" ng-click="goToResults(search.type, search.data)">
+				<i class="icon ion-search"></i> Search
+			</button>
 		</div>
   </ion-content>
 </ion-view>
