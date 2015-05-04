@@ -118,7 +118,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.moreDataCanBeLoaded = function() {
-    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+    if($scope.totalItemsLoaded < $scope.totalItemsArray){
       return true;
     } else {
       return false;
@@ -190,7 +190,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.moreDataCanBeLoaded = function() {
-    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+    if($scope.totalItemsLoaded < $scope.totalItemsArray){
       return true;
     } else {
       return false;
@@ -262,7 +262,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.moreDataCanBeLoaded = function() {
-    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+    if($scope.totalItemsLoaded < $scope.totalItemsArray){
       return true;
     } else {
       return false;
@@ -334,7 +334,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.moreDataCanBeLoaded = function() {
-    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+    if($scope.totalItemsLoaded < $scope.totalItemsArray){
       return true;
     } else {
       return false;
@@ -378,7 +378,6 @@ angular.module('starter.controllers', [])
                     .then(function (result) {
                       $scope.storyList.push(result.data);
                       $scope.totalItemsLoaded++;
-                      //console.log($scope.totalItemsLoaded);
                     });
                 };
 
@@ -397,7 +396,6 @@ angular.module('starter.controllers', [])
         .then(function (result) {
           $scope.storyList.push(result.data);
           $scope.totalItemsLoaded++;
-          //console.log($scope.totalItemsLoaded);
         });
     };
 
@@ -407,7 +405,7 @@ angular.module('starter.controllers', [])
   };
 
   $scope.moreDataCanBeLoaded = function() {
-    if($scope.totalItemsLoaded <= $scope.totalItemsArray){
+    if($scope.totalItemsLoaded < $scope.totalItemsArray){
       return true;
     } else {
       return false;
@@ -598,6 +596,22 @@ angular.module('starter.controllers', [])
 })
 
 .controller('UserCtrl', function($scope, $stateParams, hackerNewsApi) {
+  
+  hackerNewsApi.getUser($stateParams.userId)
+    .error(function (result) {
+      console.log(result.error);
+    })
+    .then(function (result) {
+
+      console.log(result);
+      var user = result.data;
+      console.log(user.id);
+      $scope.user = user;
+    });
+})
+
+.controller('UserCommentsCtrl', function($scope, $stateParams, hackerNewsApi) {
+  
   hackerNewsApi.getUser($stateParams.userId)
     .error(function (result) {
       console.log(result.error);
@@ -610,8 +624,8 @@ angular.module('starter.controllers', [])
       $scope.user = user;
     });
 
-
 })
+
 .controller('AboutCtrl', function($scope) {
 });
 
