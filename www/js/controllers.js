@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, externalBrowser, $ionicScrollDelegate) {
+.controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, $state, externalBrowser, $ionicScrollDelegate) {
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -25,16 +25,40 @@ angular.module('starter.controllers', [])
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
 
-    $http.get("https://news.ycombinator.com/login")
-      .then(function(result){
-          console.log(result);
-      })
-
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
+  };
+
+  // Form data for the user modal
+  $scope.userData = {};
+
+  /*-- User Modal --*/
+  $ionicModal.fromTemplateUrl('templates/user-search.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.userModal = modal;
+  });
+
+    // Triggered in the user modal to close it
+  $scope.closeUserSearch = function() {
+    $scope.userModal.hide();
+  };
+
+  // Open the user modal
+  $scope.userSearch = function() {
+    $scope.userModal.show();
+  };
+
+  // Perform the user action when the user searchs for a user name
+  $scope.goToUserProfile = function() {
+    console.log('Going to User Profile', $scope.userData);
+
+    $state.go('app.user', {'userId': $scope.userData.username});
+
+    $scope.closeUserSearch();
   };
 
     //https://github.com/apache/cordova-plugin-inappbrowser
