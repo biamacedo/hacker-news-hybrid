@@ -626,10 +626,9 @@ angular.module('starter.controllers', [])
       console.log(result.error);
     })
     .then(function (result) {
-
-      console.log(result);
+      //console.log(result);
       var user = result.data;
-      console.log(user.id);
+      //console.log(user.id);
       $scope.user = user;
     });
 
@@ -644,9 +643,9 @@ angular.module('starter.controllers', [])
     })
     .then(function (result) {
 
-      console.log(result);
+      //console.log(result);
       var user = result.data;
-      console.log(user.id);
+      //console.log(user.id);
       $scope.user = user;
 
       for(var i = 0; i < user.submitted.length; i++) {
@@ -656,7 +655,7 @@ angular.module('starter.controllers', [])
 
 
             if(comment.deleted !== true && comment.type === "comment"){ // some comments can be deleted by HN / marked as [flagged]
-              console.log(comment.by);
+              //console.log(comment.by);
               comment.text = commentParser.parse(comment.text)
               $scope.storyComments.push(comment);
             }
@@ -666,6 +665,92 @@ angular.module('starter.controllers', [])
     });
 
 })
+
+.controller('UserStoriesCtrl', function($scope, $state,$stateParams, hackerNewsApi, socialSharing, externalBrowser) {
+    $scope.pageSize = 30;
+    $scope.totalItemsLoaded = 0;
+    $scope.totalItemsArray = 0; // Total Array Size
+    $scope.viewTitle = "User Threads"; //Necessary because all lists use the same template
+    var storiesIds = [];
+
+  $scope.doRefresh = function() {
+    $scope.totalItemsLoaded = 0;
+    $scope.storyList = [];
+
+    hackerNewsApi.getUser($stateParams.userId)
+        .error(function (result) {
+          console.log(result.error);
+        })
+        .then(function (result) {
+          //console.log(result);
+          var user = result.data;
+          //console.log(user.id);
+          $scope.user = user;
+          storiesIds = user.submitted;
+          $scope.totalItemsArray = user.submitted.length;
+
+          for(var i = 0; i < $scope.totalItemsArray && i < $scope.pageSize; i++) {
+            hackerNewsApi.getItem(storiesIds[i])
+              .then(function (result) {
+                var story = result.data;
+
+                if(story.type === "story"){ // some comments can be deleted by HN / marked as [flagged]
+                  //console.log(story.by);
+                  $scope.storyList.push(result.data);
+                  $scope.totalItemsLoaded++;
+                  console.log($scope.totalItemsLoaded);
+                }
+              });
+
+          };
+          // Stop the ion-refresher from spinning
+          $scope.$broadcast('scroll.refreshComplete');
+          console.log("Refresh Done");
+        });
+
+  };
+
+  $scope.loadMoreData = function() {
+    console.log('Loading more data!');
+
+    var initialTotalItems = $scope.totalItemsLoaded;
+    for (var i = initialTotalItems; i < (initialTotalItems + $scope.pageSize) 
+      && $scope.totalItemsLoaded < $scope.totalItemsArray; i++) {
+      hackerNewsApi.getItem(storiesIds[i])
+        .then(function (result) {
+          $scope.storyList.push(result.data);
+          $scope.totalItemsLoaded++;
+        });
+    };
+
+   // Stop the ion-refresher from spinning
+    $scope.$broadcast('scroll.refreshComplete');
+    console.log("Refresh Done");
+  };
+
+  $scope.moreDataCanBeLoaded = function() {
+    if($scope.totalItemsLoaded < $scope.totalItemsArray){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    externalBrowser.open(url);
+  };
+
+  $scope.goToCommentsPage = function(id){
+    $state.go('app.comments', {'storyId': id});
+  };
+
+  $scope.share = function(title, url){
+    socialSharing.share(title, url);
+  }
+
+})
+
 
 .controller('AboutCtrl', function($scope) {
 });

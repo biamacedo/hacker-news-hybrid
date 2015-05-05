@@ -66,6 +66,16 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     }
   })
 
+  .state('app.userStories', {
+    url: "/user/stories/:userId",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/story-list.html",
+        controller: 'UserStoriesCtrl'
+      }
+    }
+  })
+
   .state('app.topStories', {
     url: "/topStories",
     views: {
