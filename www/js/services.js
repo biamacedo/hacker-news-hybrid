@@ -238,37 +238,11 @@ angular.module('starter.services', [])
       function getUrl(path) {
         return searchRef + path;
       };
-
-      function getUrlForId(path, id) {
-        return getUrl(path) + id;
-      };
-
-      function getUrlForSearch(type, text) {
-        return getUrl(searchPath) + type + text;
-      };
-
+      
       function getUrlForSearchByTextAndTag(text, tags) {
-        var httpLink = getUrl(searchPath) + queryPath + text + and + tagsPath + tags;
+        var httpLink = getUrl(searchByDatePath) + queryPath + text + and + tagsPath + tags;
         console.log(httpLink);
         return httpLink;
-      };
-
-      function getUrlForSearchByTag(tags) {
-        var httpLink =getUrl(searchPath) + tagsPath + tags;
-        console.log(httpLink);
-        return httpLink;
-      };
-
-      function fetchItem(itemId) {
-        console.log("Fetch Item");
-        var httpLink =  $http.get(getUrlForId(itemPath, itemId));
-        console.log(httpLink);
-        return httpLink;
-      };
-
-      function fetchUser(userId) {
-        console.log("Fetch User");
-        return $http.get(getUrlForId(userPath, userId));
       };
 
       function fetchStory(text) {
@@ -276,47 +250,34 @@ angular.module('starter.services', [])
         return $http.get(getUrlForSearchByTextAndTag(text, "story"));
       };
 
-      function fetchStoryComments(storyId) {
+      function fetchComment(text) {
         console.log("Fetch Story");
-        return $http.get(getUrlForSearchByTags("comment,story_"+storyId));
+        return $http.get(getUrlForSearchByTextAndTag(text, "comment"));
       };
 
-      function fetchFrontPageUrl() {
-        console.log("Fetch Front Page");
-        return getUrlForSearchByTag("front_page");
+      function fetchAsk(text) {
+        console.log("Fetch Story");
+        return $http.get(getUrlForSearchByTextAndTag(text, "ask_hn"));
       };
 
-      function fetchFrontPage() {
-        console.log("Fetch Front Page");
-        return $http.get(getUrlForSearchByTag("front_page"));
+      function fetchShow(text) {
+        console.log("Fetch Story");
+        return $http.get(getUrlForSearchByTextAndTag(text, "show_hn"));
       };
 
-      function fetchInformation(url) {
-        console.log("Fetch Info");
-        return $http.get(url);
-      };
 
       return{
-            getItem: function(){
-              return fetchItem();
+            searchStory: function(text){
+              return fetchStory(text);
+            },
+            searchComment: function(text){
+              return fetchComment(text);
             }, 
-            getUser:  function(){
-              return fetchUser();
+            searchAsk: function(text){
+              return fetchAsk(text);
             }, 
-            getStory: function(){
-              return  fetchStory();
-            }, 
-            getStoryComments:  function(storyId){
-              return fetchStoryComments(storyId);
-            }, 
-            getFrontPage:  function(){
-              return fetchFrontPageUrl();
-            }, 
-            getFrontPageUrl:  function(){
-              return fetchFrontPageUrl();
-            }, 
-            retrieveInfo:  function(url){
-              return fetchInformation(url);
-            }, 
-          };
+            searchShow: function(text){
+              return fetchShow(text);
+            }
+      };
   });

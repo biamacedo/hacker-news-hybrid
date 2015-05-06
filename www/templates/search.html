@@ -2,26 +2,23 @@
   <ion-content>
     	<div class="list list-inset">
     		<form name="form">
-			  <label class="item item-input">
-			    <i class="icon ion-search placeholder-icon"></i>
-			    <input type="text" placeholder="Search" name="searchField" ng-model="search.data">
-			  </label>
+	
 			  <label class="item item-input item-select">
 			    <div class="input-label">
-			      Type
+			      Search For:
 			    </div>
 			    <select ng-model ="search.type" required>
-			      <option ng-value="1" selected>Story</option>
+			      <!--<option ng-value="0">All</option>-->
+			      <option ng-value="1">Story</option>
 			      <option ng-value="2">Comment</option>
-			      <option ng-value="3">User</option>
-			      <option ng-value="4">Ask</option>
-			      <option ng-value="5">Show</option>
-			      <option ng-value="6">Jobs</option>
+			      <option ng-value="3">Ask HN</option>
+			      <option ng-value="4">Show HN</option>
+			      <!--<option ng-value="5">Jobs</option>-->
 			    </select>
 			  </label>
 			  <label class="item item-input">
-			    <span class="input-label">Username</span>
-	    		<input type="text" ng-model="search.username" required>
+			    <i class="icon ion-search placeholder-icon"></i>
+			    <input type="text" placeholder="Fill with data you're looking for." name="searchField" ng-model="search.data">
 			  </label>
 			</form>
 		  	<button class="button button-block button-positive" ng-click="goToResults(search.type, search.data)">

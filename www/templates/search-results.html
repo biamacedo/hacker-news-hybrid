@@ -2,8 +2,10 @@
   <ion-content>
     <ion-list>
     	<!-- STORIES -->
-		<ion-item ng-repeat="story in resultsList" ng-show="story.type==='story'"> 
-          	<i class="icon">
+      <ion-item class="item item-icon-left item-icon-right"
+         ng-repeat="story in resultsList"
+         ng-click="openBrowser(story.url)" ng-show="parent_id === null">  <!--href="{{story.url}}" target="_blank" -->
+          <i class="icon">
             <button class="story-score button button-small button-dark">
               <i>{{story.points}}</i>
             </button>
@@ -17,32 +19,47 @@
           <span ng-show="story.url" class="story-domain item-note">
             ({{ story.url | domain }})
           </span>
-          <i class="icon" ng-show="story.descendants">
+          <i class="icon" ng-show="story.num_comments">
                <!--href="#/app/comments/{{story.id}}">-->
             <a class="story-comments badge badge-positive" >
-               {{story.children.length}}
+               {{story.num_comments}}
             </a>
           </i>
-    	</ion-item>
+
+          <ion-option-button class="button-dark center-content"
+                       ng-click="share(story.title, story.url)">
+            <i class="icon ion-share custom-icon"></i>
+          </ion-option-button>
+          <ion-option-button class="button-dark center-content"
+                             ng-click="goToCommentsPage(story.id)">
+            <i class="icon ion-chatbox-working"></i>
+          </ion-option-button>
+      </ion-item>
     	<!-- COMMENTS -->
-      	<div class="card">
-		  <!--<div class="item item-divider">
-		    <span class="item-text-wrap"><b>{{story.title}}</b> by {{story.by}}</span>
-		  </div>-->
-		  <!--The next divider is to show the ask description-->
-		  <!--<div class="item item-divider" ng-show="story.text">
-		    <span class="item-text-wrap" ng-bind-html="story.text"></span>
-		  </div>-->
-		  <div class="item" ng-repeat="comment in resultsList" ng-show="comment.type === 'comment'">
-		    <span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
-	    	<span class="item-note">({{ comment.author }} at {{comment.created_at_i * 1000 | timeAgo}})</span>
-		  </div>
-		</div>
-		<!-- USERS -->
-    	<ion-item ng-repeat="user in resultsList" ng-show="user.username"> 
-          	<b>{{user.username | uppercase}}</b>
-          	<span class="item-note">(created: {{user.created_at_i * 1000 | timeAgo}})</span>
-    	</ion-item>
+         <div class="card" ng-show="parent_id !== null">
+          <!--<div class="item item-divider" style="padding-bottom: 20px;">
+          <p>Created: {{story.time * 1000 | timeAgo}}</p>
+            <span class="item-text-wrap"><b>{{story.title}}</b></span>
+            <a class="badge badge-positive" href="#/app/user/{{story.by}}" style="text-decoration: none;margin-right:-20px;margin-top:-2px;">
+            {{story.by}}
+          </a> 
+          </div>-->
+          <!--The next divider is to show the ask description-->
+          <div class="item item-divider" ng-show="story.text">
+            <span class="item-text-wrap" ng-bind-html="story.text"></span>
+          </div>
+          <div class="item" ng-repeat="comment in resultsList">
+
+            <div style="background-color:#F5F5F5;position:absolute;width:20px;height:105%;margin-top:-20px;margin-left:-20px;"></div>
+            <div style="margin-left:20px;">
+              <a class="badge badge-positive" href="#/app/user/{{comment.author}}" style="text-decoration: none;margin-top:-7px;margin-right:-20px;">
+            {{comment.author}} | {{comment.created_at_i * 1000 | timeAgo}}
+            </a>
+            <hr style="height:5pt; visibility:hidden;" />
+              <span class="comment-text item-text-wrap" ng-bind-html="comment.comment_text"></span>
+          </div>
+          </div>
+        </div>
     </ion-list>
   </ion-content>
 </ion-view>

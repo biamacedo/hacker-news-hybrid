@@ -1,6 +1,8 @@
 angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, $state, externalBrowser, $ionicScrollDelegate) {
+
+/*  // ---- Login Part ---
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -10,6 +12,7 @@ angular.module('starter.controllers', [])
   }).then(function(modal) {
     $scope.modal = modal;
   });
+
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
@@ -30,7 +33,7 @@ angular.module('starter.controllers', [])
     $timeout(function() {
       $scope.closeLogin();
     }, 1000);
-  };
+  };*/
 
   // Form data for the user modal
   $scope.userData = {};
@@ -552,70 +555,73 @@ angular.module('starter.controllers', [])
     $scope.type = $stateParams.type;
     console.log($stateParams.type);
     console.log($stateParams.text);
+    $scope.resultsList = [];
 
-  $scope.getItem = function(itemId) {
-    console.log("correct function?");
-    searchApi.getItem(itemId)
+  $scope.getStory = function(text) {
+    console.log("correct story function?");
+    searchApi.searchStory(text)
       .then(function (result) {
         console.log(JSON.stringify(result.data));
-        var resultArray = [];
-        resultArray.push(result.data);
-        $scope.resultsList = resultArray;
+        $scope.resultsList = result.data.hits;  
+        console.log(result.data.hits);
       });
   };
 
-  $scope.getUser = function(userName) {
-    console.log("correct user?");
-    searchApi.getUser(userName)
+  $scope.getComment = function(text) {
+    console.log("correct story function?");
+    searchApi.searchComment(text)
       .then(function (result) {
         console.log(JSON.stringify(result.data));
-        var resultArray = [];
-        resultArray.push(result.data);
-        $scope.resultsList = resultArray;
+        $scope.resultsList = result.data.hits;  
+        console.log(result.data.hits);
       });
   };
-
-  $scope.getFrontPage = function() {
-    console.log("correct front page?");
-    searchApi.getFrontPage()
+  
+  $scope.getAsk = function(text) {
+    console.log("correct story function?");
+    searchApi.searchAsk(text)
       .then(function (result) {
         console.log(JSON.stringify(result.data));
-        var resultArray = [];
-        resultArray.push(result.data);
-        $scope.resultsList = resultArray[0].hits;
+        $scope.resultsList = result.data.hits;  
+        console.log(result.data.hits);
+      });
+  };  
+
+  $scope.getShow = function(text) {
+    console.log("correct story function?");
+    searchApi.searchShow(text)
+      .then(function (result) {
+        console.log(JSON.stringify(result.data));
+        $scope.resultsList = result.data.hits;  
+        console.log(result.data.hits);
       });
   };
-
 
     switch($stateParams.type){
       case '1': // Story
         console.log("option 1!");
-        $scope.getItem($stateParams.text);
+        $scope.getStory($stateParams.text);
         break;
       case '2': // Comment
         console.log("option 2!");
-        $scope.getUser($stateParams.text);
+        $scope.getComment($stateParams.text);
         break;
-      case '3': // User
+      case '3': // Ask
         console.log("option 3!");
-        $scope.getUser($stateParams.text);
+        $scope.getAsk($stateParams.text);
         break;
-      case '4': // Ask
+      case '4': // Show
         console.log("option 4!");
-        $scope.getUser($stateParams.text);
+        $scope.getShow($stateParams.text);
         break;
-      case '5': // Show
+     /* default: // All
+        console.log("default!");
+        $scope.getItem($stateParams.text);
+        break;*/
+     /*case '5': // Poll
         console.log("option 5!");
-        $scope.getUser($stateParams.text);
-        break;
-      case '6': // Poll
-        console.log("option 6!");
-        $scope.getUser($stateParams.text);
-        break;
-      case '7': // Front Page
-        console.log("option 7!");
-        $scope.getFrontPage();
-        break;
+        $scope.getItem($stateParams.text);
+        break;*/
     };
 })
 
@@ -694,8 +700,8 @@ angular.module('starter.controllers', [])
               .then(function (result) {
                 var story = result.data;
 
-                if(story.type === "story"){ // some comments can be deleted by HN / marked as [flagged]
-                  //console.log(story.by);
+                if(story.deleted !== true && story.type === "story"){ // some comments can be deleted by HN / marked as [flagged]
+                  console.log(story);
                   $scope.storyList.push(result.data);
                   $scope.totalItemsLoaded++;
                   console.log($scope.totalItemsLoaded);
