@@ -19,6 +19,28 @@ angular.module('starter.services', [])
   }
 }])
 
+.service('loading', function($ionicLoading) {
+
+  function showLoading() {
+    $ionicLoading.show({
+      template: '<p>Loading</p><ion-spinner icon="circles"></ion-spinner>',
+    hideOnStageChange: true
+    });
+  };
+  function hideLoading(){
+    $ionicLoading.hide();
+  };
+
+  return {
+    show: function(){
+      showLoading();
+    },
+    hide: function(){
+      hideLoading();
+    }
+  }
+})
+
 .service('socialSharing', function() {
   return{
     share : function(title, url){
