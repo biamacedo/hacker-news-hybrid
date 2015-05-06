@@ -111,16 +111,107 @@ angular.module('starter.controllers', [])
     $q.when(hackerNewsApi.getTopStories()).then(function(result) {
         console.log("List Returned")
         storiesIds = result.data;
-        console.log(storiesIds);
+        //cconsole.log(storiesIds);
 
         for (var i = 0; i < $scope.pageSize; i++) {
           promisses.push(hackerNewsApi.getItem(storiesIds[i]));
         }
 
-        console.log(promisses);
+        //cconsole.log(promisses);
         $q.all(promisses).then( function(arrayOfResponses) {
             console.log('all set');
-            console.log(arrayOfResponses);
+            //cconsole.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+            
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
+        });
+     });
+
+  };
+
+  $scope.loadMoreData = function() {
+    console.log('Loading more data!');
+    var promisses = [];
+    loading.show();
+
+    for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
+      && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
+    };
+
+    //cconsole.log(promisses);
+    $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //cconsole.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
+     });
+  };
+
+  $scope.moreDataCanBeLoaded = function() {
+    if($scope.totalItemsLoaded < $scope.totalItemsArray){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    externalBrowser.open(url);
+  };
+
+  $scope.goToCommentsPage = function(id){
+    $state.go('app.comments', {'storyId': id});
+  };
+
+  $scope.share = function(title, url) {
+    socialSharing.share(title, url);
+  }
+
+})
+
+.controller('NewStoriesCtrl', function($scope, $state, $q, loading, hackerNewsApi, socialSharing, externalBrowser) {
+    $scope.pageSize = 30;
+    $scope.totalItemsLoaded = 0;
+    $scope.totalItemsArray = 500; // Set on Firebase Database by Hacker News
+    $scope.viewTitle = "New Stories"; //Necessary because all lists use the same template
+    var storiesIds = [];
+
+  $scope.doRefresh = function() {
+    $scope.totalItemsLoaded = 0;
+    $scope.storyList = [];
+    var promisses = [];
+
+    loading.show();
+    $q.when(hackerNewsApi.getNewStories()).then(function(result) {
+        console.log("List Returned")
+        storiesIds = result.data;
+        //cconsole.log(storiesIds);
+
+        for (var i = 0; i < $scope.pageSize; i++) {
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
+        }
+
+        //cconsole.log(promisses);
+        $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //console.log(arrayOfResponses);
 
             for (var i = 0; i < arrayOfResponses.length; i++) {
               $scope.storyList.push(arrayOfResponses[i].data);
@@ -149,7 +240,7 @@ angular.module('starter.controllers', [])
     console.log(promisses);
     $q.all(promisses).then( function(arrayOfResponses) {
             console.log('all set');
-            console.log(arrayOfResponses);
+            //cconsole.log(arrayOfResponses);
 
             for (var i = 0; i < arrayOfResponses.length; i++) {
               $scope.storyList.push(arrayOfResponses[i].data);
@@ -186,79 +277,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('NewStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
-    $scope.pageSize = 30;
-    $scope.totalItemsLoaded = 0;
-    $scope.totalItemsArray = 500; // Set on Firebase Database by Hacker News
-    $scope.viewTitle = "New Stories"; //Necessary because all lists use the same template
-    var storiesIds = [];
-
-  $scope.doRefresh = function() {
-    $scope.totalItemsLoaded = 0;
-    $scope.storyList = [];
-
-    hackerNewsApi.getNewStories()
-        .then(function (result) {
-          storiesIds = result.data;
-          console.log(storiesIds);
-
-                for (var i = 0; i < $scope.pageSize; i++) {
-                  hackerNewsApi.getItem(storiesIds[i])
-                    .then(function (result) {
-                      $scope.storyList.push(result.data);
-                      $scope.totalItemsLoaded++;
-                      //console.log($scope.totalItemsLoaded);
-                    });
-                };
-
-          // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
-          console.log("Refresh Done");
-        });
-  };
-
-  $scope.loadMoreData = function() {
-    console.log('Loading more data!');
-
-    for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
-      && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
-      hackerNewsApi.getItem(storiesIds[i])
-        .then(function (result) {
-          $scope.storyList.push(result.data);
-          $scope.totalItemsLoaded++;
-          //console.log($scope.totalItemsLoaded);
-        });
-    };
-
-   // Stop the ion-refresher from spinning
-    $scope.$broadcast('scroll.refreshComplete');
-    console.log("Refresh Done");
-  };
-
-  $scope.moreDataCanBeLoaded = function() {
-    if($scope.totalItemsLoaded < $scope.totalItemsArray){
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  //https://github.com/apache/cordova-plugin-inappbrowser
-  $scope.openBrowser = function(url){
-    externalBrowser.open(url);
-  };
-
-  $scope.goToCommentsPage = function(id){
-    $state.go('app.comments', {'storyId': id});
-  };
-
-  $scope.share = function(title, url) {
-    socialSharing.share(title, url);
-  }
-
-})
-
-.controller('AskStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
+.controller('AskStoriesCtrl', function($scope, $state, $q, loading, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 200; // Set on Firebase Database by Hacker News
@@ -268,43 +287,62 @@ angular.module('starter.controllers', [])
   $scope.doRefresh = function() {
     $scope.totalItemsLoaded = 0;
     $scope.storyList = [];
+    var promisses = [];
 
-    hackerNewsApi.getAskStories()
-        .then(function (result) {
-          storiesIds = result.data;
-          console.log(storiesIds);
+    loading.show();
+    $q.when(hackerNewsApi.getAskStories()).then(function(result) {
+        console.log("List Returned")
+        storiesIds = result.data;
+        //cconsole.log(storiesIds);
 
-                for (var i = 0; i < $scope.pageSize; i++) {
-                  hackerNewsApi.getItem(storiesIds[i])
-                    .then(function (result) {
-                      $scope.storyList.push(result.data);
-                      $scope.totalItemsLoaded++;
-                      //console.log($scope.totalItemsLoaded);
-                    });
-                };
+        for (var i = 0; i < $scope.pageSize; i++) {
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
+        }
 
-          // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
-          console.log("Refresh Done");
+        //cconsole.log(promisses);
+        $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //cconsole.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+            
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
         });
+     });
+
   };
 
   $scope.loadMoreData = function() {
     console.log('Loading more data!');
+    var promisses = [];
+    loading.show();
 
     for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
       && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
-      hackerNewsApi.getItem(storiesIds[i])
-        .then(function (result) {
-          $scope.storyList.push(result.data);
-          $scope.totalItemsLoaded++;
-          //console.log($scope.totalItemsLoaded);
-        });
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
     };
 
-   // Stop the ion-refresher from spinning
-    $scope.$broadcast('scroll.refreshComplete');
-    console.log("Refresh Done");
+    //console.log(promisses);
+    $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //console.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
+     });
   };
 
   $scope.moreDataCanBeLoaded = function() {
@@ -330,7 +368,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ShowStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
+.controller('ShowStoriesCtrl', function($scope, $state, $q, loading, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 200; // Set on Firebase Database by Hacker News
@@ -340,43 +378,62 @@ angular.module('starter.controllers', [])
   $scope.doRefresh = function() {
     $scope.totalItemsLoaded = 0;
     $scope.storyList = [];
+    var promisses = [];
 
-    hackerNewsApi.getShowStories()
-        .then(function (result) {
-          storiesIds = result.data;
-          console.log(storiesIds);
+    loading.show();
+    $q.when(hackerNewsApi.getShowStories()).then(function(result) {
+        console.log("List Returned")
+        storiesIds = result.data;
+        //console.log(storiesIds);
 
-                for (var i = 0; i < $scope.pageSize; i++) {
-                  hackerNewsApi.getItem(storiesIds[i])
-                    .then(function (result) {
-                      $scope.storyList.push(result.data);
-                      $scope.totalItemsLoaded++;
-                      //console.log($scope.totalItemsLoaded);
-                    });
-                };
+        for (var i = 0; i < $scope.pageSize; i++) {
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
+        }
 
-          // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
-          console.log("Refresh Done");
+        //console.log(promisses);
+        $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //console.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+            
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
         });
+     });
+
   };
 
   $scope.loadMoreData = function() {
     console.log('Loading more data!');
+    var promisses = [];
+    loading.show();
 
     for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
       && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
-      hackerNewsApi.getItem(storiesIds[i])
-        .then(function (result) {
-          $scope.storyList.push(result.data);
-          $scope.totalItemsLoaded++;
-          //console.log($scope.totalItemsLoaded);
-        });
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
     };
 
-   // Stop the ion-refresher from spinning
-    $scope.$broadcast('scroll.refreshComplete');
-    console.log("Refresh Done");
+    //console.log(promisses);
+    $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //console.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
+     });
   };
 
   $scope.moreDataCanBeLoaded = function() {
@@ -402,7 +459,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('JobStoriesCtrl', function($scope, $state, hackerNewsApi, socialSharing, externalBrowser) {
+.controller('JobStoriesCtrl', function($scope, $state, $q, loading, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 0; // Total Array Size
@@ -412,42 +469,63 @@ angular.module('starter.controllers', [])
   $scope.doRefresh = function() {
     $scope.totalItemsLoaded = 0;
     $scope.storyList = [];
+    var promisses = [];
 
-    hackerNewsApi.getJobStories()
-        .then(function (result) {
-          storiesIds = result.data;
-          //console.log(storiesIds);
-          $scope.totalItemsArray = storiesIds.length;
-                for (var i = 0; i < $scope.pageSize 
-                    && i < $scope.totalItemsArray; i++) { // Only list that can have less items then the Page Size
-                  hackerNewsApi.getItem(storiesIds[i])
-                    .then(function (result) {
-                      $scope.storyList.push(result.data);
-                      $scope.totalItemsLoaded++;
-                    });
-                };
+    loading.show();
+    $q.when(hackerNewsApi.getJobStories()).then(function(result) {
+        console.log("List Returned")
+        storiesIds = result.data;
+        //console.log(storiesIds);
 
-          // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
-          console.log("Refresh Done");
+        //Jobs array can have less items than page size
+        for (var i = 0; i < $scope.pageSize && i < storiesIds.length; i++) { 
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
+        }
+
+        //console.log(promisses);
+        $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //console.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+            
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
         });
+     });
+
   };
 
   $scope.loadMoreData = function() {
     console.log('Loading more data!');
+    var promisses = [];
+    loading.show();
 
     for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
-      && $scope.totalItemsLoaded < $scope.totalItemsArray; i++) {
-      hackerNewsApi.getItem(storiesIds[i])
-        .then(function (result) {
-          $scope.storyList.push(result.data);
-          $scope.totalItemsLoaded++;
-        });
+      && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
     };
 
-   // Stop the ion-refresher from spinning
-    $scope.$broadcast('scroll.refreshComplete');
-    console.log("Refresh Done");
+    //console.log(promisses);
+    $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //console.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              $scope.storyList.push(arrayOfResponses[i].data);
+              $scope.totalItemsLoaded++;
+            }
+
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
+     });
   };
 
   $scope.moreDataCanBeLoaded = function() {
