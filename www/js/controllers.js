@@ -826,9 +826,10 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('UserCommentsCtrl', function($scope, $stateParams, hackerNewsApi, commentParser) {
+.controller('UserCommentsCtrl', function($scope, $stateParams, loading, hackerNewsApi, commentParser) {
   $scope.storyComments = [];
 
+  loading.show();
   hackerNewsApi.getUser($stateParams.userId)
     .error(function (result) {
       console.log(result.error);
@@ -854,11 +855,12 @@ angular.module('starter.controllers', [])
           });
 
       };
+      loading.hide();
     });
 
 })
 
-.controller('UserStoriesCtrl', function($scope, $state,$stateParams, hackerNewsApi, socialSharing, externalBrowser) {
+.controller('UserStoriesCtrl', function($scope, $state,$stateParams, loading, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 0; // Total Array Size
@@ -869,6 +871,7 @@ angular.module('starter.controllers', [])
     $scope.totalItemsLoaded = 0;
     $scope.storyList = [];
 
+    loading.show();
     hackerNewsApi.getUser($stateParams.userId)
         .error(function (result) {
           console.log(result.error);
@@ -898,6 +901,8 @@ angular.module('starter.controllers', [])
           // Stop the ion-refresher from spinning
           $scope.$broadcast('scroll.refreshComplete');
           console.log("Refresh Done");
+
+          loading.hide();
         });
 
   };
@@ -905,6 +910,7 @@ angular.module('starter.controllers', [])
   $scope.loadMoreData = function() {
     console.log('Loading more data!');
 
+    loading.show();
     var initialTotalItems = $scope.totalItemsLoaded;
     for (var i = initialTotalItems; i < (initialTotalItems + $scope.pageSize) 
       && $scope.totalItemsLoaded < $scope.totalItemsArray; i++) {
@@ -918,6 +924,7 @@ angular.module('starter.controllers', [])
    // Stop the ion-refresher from spinning
     $scope.$broadcast('scroll.refreshComplete');
     console.log("Refresh Done");
+    loading.hide();
   };
 
   $scope.moreDataCanBeLoaded = function() {
