@@ -700,7 +700,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SearchResultsCtrl', function($scope, $stateParams, searchApi) {
+.controller('SearchResultsCtrl', function($scope, $state, $stateParams, searchApi, socialSharing) {
     console.log("arrived at results!");
     $scope.type = $stateParams.type;
     console.log($stateParams.type);
@@ -711,7 +711,7 @@ angular.module('starter.controllers', [])
     //console.log("correct story function?");
     searchApi.searchStory(text)
       .then(function (result) {
-        //console.log(JSON.stringify(result.data));
+        console.log(JSON.stringify(result.data));
         $scope.resultsList = result.data.hits;  
         //console.log(result.data.hits);
       });
@@ -773,6 +773,19 @@ angular.module('starter.controllers', [])
         $scope.getItem($stateParams.text);
         break;*/
     };
+
+      //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    externalBrowser.open(url);
+  };
+
+  $scope.goToCommentsPage = function(id){
+    $state.go('app.comments', {'storyId': id});
+  };
+
+  $scope.share = function(title, url) {
+    socialSharing.share(title, url);
+  }
 })
 
 .controller('UserCtrl', function($scope, $stateParams, hackerNewsApi) {
