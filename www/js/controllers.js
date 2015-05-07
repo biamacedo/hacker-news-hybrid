@@ -559,6 +559,7 @@ angular.module('starter.controllers', [])
       $q.when(hackerNewsApi.getItem(storyId)).then(function(result) {
         var story = result.data;
         story.nodes = [];
+        story.text = commentParser.parse(story.text);
         console.log(story.id);
         $scope.story = story;
         $scope.loadComments(story.kids);
