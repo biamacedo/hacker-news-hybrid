@@ -583,8 +583,10 @@ angular.module('starter.controllers', [])
         console.log(arrayOfResponses);
 
         for (var i = 0; i < arrayOfResponses.length; i++) {
-          arrayOfResponses[i].data.text=commentParser.parse(arrayOfResponses[i].data.text);
-          comments.push(arrayOfResponses[i].data);
+          if(arrayOfResponses[i].data.deleted !== true){
+            arrayOfResponses[i].data.text=commentParser.parse(arrayOfResponses[i].data.text);
+            comments.push(arrayOfResponses[i].data);
+          }
         }
 
         $scope.story.nodes =  comments;
@@ -688,6 +690,7 @@ angular.module('starter.controllers', [])
 
 .controller('SearchCtrl', function($scope, $state) {
   console.log("At least controller correct");
+  $scope.searchType = "1";
 
   $scope.goToResults = function(type, data) {
        console.log("Moving to Results");

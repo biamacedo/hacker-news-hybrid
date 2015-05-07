@@ -1,7 +1,7 @@
 <ion-view view-title="Search">
   <ion-content>
     	<div class="list list-inset">
-    		<form name="form">
+    		<form name="form" ng-init="search.type = 1">
 	
 			  <label class="item item-input item-select">
 			    <div class="input-label">
@@ -9,10 +9,10 @@
 			    </div>
 			    <select ng-model ="search.type" required>
 			      <!--<option ng-value="0">All</option>-->
-			      <option ng-value="1">Story</option>
-			      <option ng-value="2">Comment</option>
-			      <option ng-value="3">Ask HN</option>
-			      <option ng-value="4">Show HN</option>
+			      <option value="1">Story</option>
+			      <option value="2">Comment</option>
+			      <option value="3">Ask HN</option>
+			      <option value="4">Show HN</option>
 			      <!--<option ng-value="5">Jobs</option>-->
 			    </select>
 			  </label>
