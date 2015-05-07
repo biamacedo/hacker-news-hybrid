@@ -573,6 +573,11 @@ angular.module('starter.controllers', [])
       var promises =[];
       $scope.commentList = [];
 
+      if(commentIds === undefined){
+        loading.hide();
+        return;
+      }
+
       for(var i = 0; i < commentIds.length; i++) {
         console.log("Pushing Promise of "+ commentIds[i]);
         promises.push(hackerNewsApi.getItem(commentIds[i]));
@@ -635,6 +640,15 @@ angular.module('starter.controllers', [])
     $scope.removeReplies = function(commentObj){
       commentObj.showing = false;
       commentObj.nodes = [];
+    }
+
+
+    $scope.hasText = function(story){
+      if(story.text === undefined || story.text === "<p></p>"){
+        return false;
+      } else {
+        return true;
+      }
     }
 
 })
@@ -701,7 +715,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SearchResultsCtrl', function($scope, $state, $stateParams, searchApi, socialSharing) {
+.controller('SearchResultsCtrl', function($scope, $state, $stateParams, loading, searchApi, socialSharing) {
     console.log("arrived at results!");
     $scope.type = $stateParams.type;
     console.log($stateParams.type);
@@ -712,7 +726,7 @@ angular.module('starter.controllers', [])
     //console.log("correct story function?");
     searchApi.searchStory(text)
       .then(function (result) {
-        console.log(JSON.stringify(result.data));
+        //console.log(JSON.stringify(result.data));
         $scope.resultsList = result.data.hits;  
         //console.log(result.data.hits);
       });
@@ -751,19 +765,27 @@ angular.module('starter.controllers', [])
     switch($stateParams.type){
       case '1': // Story
         console.log("option 1!");
+        loading.show();
         $scope.getStory($stateParams.text);
+        loading.hide();
         break;
       case '2': // Comment
         console.log("option 2!");
+        loading.show();
         $scope.getComment($stateParams.text);
+        loading.hide();
         break;
       case '3': // Ask
         console.log("option 3!");
+        loading.show();
         $scope.getAsk($stateParams.text);
+        loading.hide();
         break;
       case '4': // Show
         console.log("option 4!");
+        loading.show();
         $scope.getShow($stateParams.text);
+        loading.hide();
         break;
      /* default: // All
         console.log("default!");
