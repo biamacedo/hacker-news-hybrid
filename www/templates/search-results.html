@@ -4,7 +4,7 @@
     	<!-- STORIES -->
       <ion-item class="item item-icon-left item-icon-right"
          ng-repeat="story in resultsList"
-         ng-click="openBrowser(story.url)" ng-show="parent_id === null">  <!--href="{{story.url}}" target="_blank" -->
+         ng-click="openBrowser(story.url)" ng-if="type !== '2'">  <!--href="{{story.url}}" target="_blank" -->
           <i class="icon">
             <button class="story-score button button-small button-dark">
               <i>{{story.points}}</i>
@@ -36,7 +36,7 @@
           </ion-option-button>
       </ion-item>
     	<!-- COMMENTS -->
-         <div class="card" ng-show="parent_id !== null">
+         <div class="card" ng-show="type === '2'">
           <!--<div class="item item-divider" style="padding-bottom: 20px;">
           <p>Created: {{story.time * 1000 | timeAgo}}</p>
             <span class="item-text-wrap"><b>{{story.title}}</b></span>

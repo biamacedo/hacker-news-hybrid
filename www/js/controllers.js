@@ -708,42 +708,42 @@ angular.module('starter.controllers', [])
     $scope.resultsList = [];
 
   $scope.getStory = function(text) {
-    console.log("correct story function?");
+    //console.log("correct story function?");
     searchApi.searchStory(text)
       .then(function (result) {
-        console.log(JSON.stringify(result.data));
+        //console.log(JSON.stringify(result.data));
         $scope.resultsList = result.data.hits;  
-        console.log(result.data.hits);
+        //console.log(result.data.hits);
       });
   };
 
   $scope.getComment = function(text) {
-    console.log("correct story function?");
+    //console.log("correct story function?");
     searchApi.searchComment(text)
       .then(function (result) {
-        console.log(JSON.stringify(result.data));
+        //console.log(JSON.stringify(result.data));
         $scope.resultsList = result.data.hits;  
-        console.log(result.data.hits);
+        //console.log(result.data.hits);
       });
   };
   
   $scope.getAsk = function(text) {
-    console.log("correct story function?");
+    //console.log("correct story function?");
     searchApi.searchAsk(text)
       .then(function (result) {
-        console.log(JSON.stringify(result.data));
+        //console.log(JSON.stringify(result.data));
         $scope.resultsList = result.data.hits;  
-        console.log(result.data.hits);
+        //console.log(result.data.hits);
       });
   };  
 
   $scope.getShow = function(text) {
-    console.log("correct story function?");
+    //console.log("correct story function?");
     searchApi.searchShow(text)
       .then(function (result) {
-        console.log(JSON.stringify(result.data));
+        //console.log(JSON.stringify(result.data));
         $scope.resultsList = result.data.hits;  
-        console.log(result.data.hits);
+        //console.log(result.data.hits);
       });
   };
 
