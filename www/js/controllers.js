@@ -551,39 +551,89 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('CommentsCtrl', function($scope, $stateParams, hackerNewsApi, commentParser) {
-    $scope.storyComments = [];
-    $scope.story = null;
-
-    var getReplyComments = function localSearch(storyComments){
-      for(var i = 0; i < storyComments.length; i++) {
-        hackerNewsApi.getItem(storyComments[i])
-          .then(function (result) {
-            var comment = result.data;
-            if(comment.kids){
-              console.log("Going to "+comment.by+ " kids");
-              localSearch(comment.kids);
-            }
-            if(comment.deleted !== true){ // some comments can be deleted by HN / marked as [flagged]
-              console.log(comment.by);
-              comment.text = commentParser.parse(comment.text)
-              $scope.storyComments.push(comment);
-            }
-          });
-
-      };
-    };
-
-    hackerNewsApi.getItem($stateParams.storyId)
-      .then(function (result) {
+.controller('CommentsCtrl', function($scope, $stateParams, $q, loading, hackerNewsApi, commentParser) {
+      console.log("Loading Story: " + $stateParams.storyId);
+      var storyId = $stateParams.storyId;
+      $scope.story = {};
+      loading.show();
+      $q.when(hackerNewsApi.getItem(storyId)).then(function(result) {
         var story = result.data;
+        story.nodes = [];
         console.log(story.id);
         $scope.story = story;
-        if(story.descendants){
-          storyComments = story.kids;
-          getReplyComments(storyComments);
-        }
+        $scope.loadComments(story.kids);
       });
+
+    $scope.loadComments = function(commentIds){
+      loading.show();
+      console.log("Loading Comments");
+      console.log(commentIds);
+      var comments = [];
+      var promises =[];
+      $scope.commentList = [];
+
+      for(var i = 0; i < commentIds.length; i++) {
+        console.log("Pushing Promise of "+ commentIds[i]);
+        promises.push(hackerNewsApi.getItem(commentIds[i]));
+      }
+
+      console.log(promises);
+      $q.all(promises).then( function(arrayOfResponses) {
+        console.log('all set');
+        console.log(arrayOfResponses);
+
+        for (var i = 0; i < arrayOfResponses.length; i++) {
+          arrayOfResponses[i].data.text=commentParser.parse(arrayOfResponses[i].data.text);
+          comments.push(arrayOfResponses[i].data);
+        }
+
+        $scope.story.nodes =  comments;
+        loading.hide();
+      });
+    }
+
+    $scope.hasReplies = function(commentObj){
+      if(commentObj.kids === undefined){
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    $scope.addReplies = function(commentObj){
+      loading.show();
+      commentObj.showing = true;
+      console.log("Loading Kids of "+ commentObj.id);
+      commentIds = commentObj.kids;
+      console.log(commentIds);
+      var comments = [];
+      var promises =[];
+
+      for(var i = 0; i < commentIds.length; i++) {
+        console.log("Pushing Promise of "+ commentIds[i]);
+        promises.push(hackerNewsApi.getItem(commentIds[i]));
+      }
+
+      console.log(promises);
+      $q.all(promises).then( function(arrayOfResponses) {
+        console.log('all set');
+        console.log(arrayOfResponses);
+
+        for (var i = 0; i < arrayOfResponses.length; i++) {
+          arrayOfResponses[i].data.text=commentParser.parse(arrayOfResponses[i].data.text);
+          comments.push(arrayOfResponses[i].data);
+        }
+
+        commentObj.nodes = comments;
+        loading.hide();
+      });
+    }
+
+    $scope.removeReplies = function(commentObj){
+      commentObj.showing = false;
+      commentObj.nodes = [];
+    }
+
 })
 
 .controller('SettingsCtrl', function($scope, $localstorage, toastProvider) {

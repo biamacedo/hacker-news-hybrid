@@ -2,7 +2,7 @@
   <ion-content id="scrollList" delegate-handle="mainScroll">
 
      <div class="card">
-	  <div class="item item-divider" style="padding-bottom: 20px;">
+	  <div  class="item item-divider" style="padding-bottom: 20px;">
 		<!--<hr style="height:5pt; visibility:hidden;" />-->
 		<p>Created: {{story.time * 1000 | timeAgo}}</p>
 	    <span class="item-text-wrap"><b>{{story.title}}</b></span>
@@ -14,17 +14,8 @@
 	  <div class="item item-divider" ng-show="story.text">
 	    <span class="item-text-wrap" ng-bind-html="story.text"></span>
 	  </div>
-	  <div class="item" ng-repeat="comment in storyComments" style="">
-
-	  	<div style="background-color:#F5F5F5;position:absolute;width:20px;height:105%;margin-top:-20px;margin-left:-20px;"></div>
-	  	<div style="margin-left:20px;">
-	  		<a class="badge badge-positive" href="#/app/user/{{comment.by}}" style="text-decoration: none;margin-top:-7px;margin-right:-20px;">
-			{{comment.by}} | {{comment.time * 1000 | timeAgo}}
-			</a>
-			<hr style="height:5pt; visibility:hidden;" />
-		    <span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
-		</div>
-	  </div>
+	  <!-- Comments Template -->
+	  <div class="item" ng-repeat="comment in story.nodes"  ng-include="'templates/comment-item-renderer.html'"></div>
 	</div>
                 
   </ion-content>

@@ -1,0 +1,19 @@
+<div style="background-color:#F5F5F5;position:absolute;width:20px;height:120%;margin-top:-20px;margin-left:-20px;margin-down:0px;"></div>
+<div style="margin-left:20px;padding-down:0px;">
+	<a 	class="badge badge-positive" 
+		href="#/app/user/{{comment.by}}" 
+		style="text-decoration:none;margin-top:-7px;margin-right:-20px;">
+		{{comment.by}} | {{comment.time * 1000 | timeAgo}}
+	</a>	
+	<hr style="height:5pt; visibility:hidden;" />
+	<span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
+		<span class="item-note">
+		<button class="button button-clear button-positive" ng-show="!comment.showing && hasReplies(comment)" ng-click="addReplies(comment)" >
+	      <i class="icon ion-plus-round"></i>
+	    </button>
+	    <button class="button button-clear button-positive" ng-show="comment.showing && hasReplies(comment)" ng-click="removeReplies(comment)" >
+	      <i class="icon ion-minus-round"></i>
+	    </button> </span>
+</div>
+<!-- Comments Template -->
+<div class="item" ng-repeat="comment in comment.nodes" ng-include="'templates/comment-item-renderer.html'"></div>
