@@ -23,7 +23,7 @@ angular.module('starter.services', [])
 
   function showLoading() {
     $ionicLoading.show({
-      template: '<p>Loading</p><ion-spinner icon="circles" class="spinner-positive"></ion-spinner>',
+      template: '<p>Loading</p><ion-spinner icon="circles" class="spinner-light"></ion-spinner>',
     hideOnStageChange: true
     });
   };
