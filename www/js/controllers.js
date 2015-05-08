@@ -60,7 +60,7 @@ angular.module('starter.controllers', [])
     console.log('Going to User Profile', $scope.userData);
 
     $state.go('app.user', {'userId': $scope.userData.username});
-
+    $scope.userData.username = "";
     $scope.closeUserSearch();
   };
 
@@ -812,7 +812,6 @@ angular.module('starter.controllers', [])
 })
 
 .controller('UserCtrl', function($scope, $stateParams, hackerNewsApi) {
-  
   hackerNewsApi.getUser($stateParams.userId)
     .error(function (result) {
       console.log(result.error);
@@ -820,8 +819,13 @@ angular.module('starter.controllers', [])
     .then(function (result) {
       //console.log(result);
       var user = result.data;
-      //console.log(user.id);
-      $scope.user = user;
+      console.log(user);
+      if(user === null){
+        $scope.error = 'error';
+      } else{
+        $scope.user = user;
+        $scope.error = 'no-error';
+      }
     });
 
 })
