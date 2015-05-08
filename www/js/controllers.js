@@ -64,6 +64,36 @@ angular.module('starter.controllers', [])
     $scope.closeUserSearch();
   };
 
+  /*-- Search Modal --*/
+  $ionicModal.fromTemplateUrl('templates/search.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.searchModal = modal;
+  });
+
+    // Triggered in the user modal to close it
+  $scope.closeSearch = function() {
+    $scope.searchModal.hide();
+  };
+
+  // Open the user modal
+  $scope.search = function() {
+    $scope.searchType = "1";
+    $scope.searchModal.show();
+  };
+
+  // Perform the user action when the user searchs for a user name
+  $scope.goToSearchResults = function(searchData) {
+    console.log('Going to Search Results' + searchData);
+
+    $state.go('app.searchResults', {'type': searchData.type, 'text': searchData.text});
+    // Resetting Inputs
+    searchData.type = "1";
+    searchData.text = "";
+    $scope.closeSearch();
+  };
+
+
     //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
     externalBrowser.open(url);
@@ -703,18 +733,6 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SearchCtrl', function($scope, $state) {
-  console.log("At least controller correct");
-  $scope.searchType = "1";
-
-  $scope.goToResults = function(type, data) {
-       console.log("Moving to Results");
-        $state.go('app.searchResults', {'type': type, 'text': data});
-        console.log("did we go?!");
-  };
-
-})
-
 .controller('SearchResultsCtrl', function($scope, $state, $stateParams, loading, searchApi, socialSharing) {
     console.log("arrived at results!");
     $scope.type = $stateParams.type;
@@ -830,7 +848,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('UserCommentsCtrl', function($scope, $stateParams, loading, hackerNewsApi, commentParser) {
+.controller('UserCommentsCtrl', function($scope, $state, $stateParams, loading, hackerNewsApi, commentParser) {
   $scope.storyComments = [];
 
   loading.show();
@@ -860,6 +878,11 @@ angular.module('starter.controllers', [])
       };
       loading.hide();
     });
+
+
+    $scope.goToCommentsPage = function(id){
+    $state.go('app.comments', {'storyId': id});
+  };
 
 })
 

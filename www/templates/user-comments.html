@@ -21,6 +21,9 @@
 	  		<a class="badge badge-positive" href="#/app/user/{{comment.by}}" style="text-decoration: none;margin-top:-7px;margin-right:-20px;">
 			{{comment.by}} | {{comment.time * 1000 | timeAgo}}
 			</a>
+			<button class="button button-clear button-positive" ng-click="goToCommentsPage(comment.parent)" style="margin-top:-20px;margin-left:-20px;">
+		      <i class="icon ion-bookmark"></i>
+		    </button> </span>
 			<hr style="height:5pt; visibility:hidden;" />
 		    <span class="comment-text item-text-wrap" ng-bind-html="comment.text"></span>
 		</div>
