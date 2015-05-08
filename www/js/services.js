@@ -262,7 +262,7 @@ angular.module('starter.services', [])
       };
       
       function getUrlForSearchByTextAndTag(text, tags) {
-        var httpLink = getUrl(searchByDatePath) + queryPath + text + and + tagsPath + tags;
+        var httpLink = getUrl(searchPath) + queryPath + text + and + tagsPath + tags;
         console.log(httpLink);
         return httpLink;
       };
