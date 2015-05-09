@@ -684,23 +684,23 @@ angular.module('starter.controllers', [])
 })
 
 .controller('SettingsCtrl', function($scope, $localstorage, toastProvider) {
-    var theme = 'light';
-    var startScreen = "top";
+    /*var theme = 'light';
+    var startScreen = "top";*/
     var externalBrowser = true;
-
+/*
       theme = $localstorage.get('theme');      
       console.log($localstorage.get('theme'));
 
       startScreen = $localstorage.get('startScreen');
       var radio = document.getElementById( startScreen );
       radio.checked = true;
-
+*/
       if($localstorage.get('externalBrowser') === 'true'){
         document.getElementById( 'externalBrowser' ).checked = true;
       } else {
         document.getElementById( 'externalBrowser' ).checked = false;
       };
-
+/*
   $scope.lightButton = function(){
     theme = "light";
    };
@@ -711,21 +711,22 @@ angular.module('starter.controllers', [])
     theme = "blue";
    };
    
-
+*/
   $scope.save = function(){
-    var radios = document.getElementsByName( 'startScreen' );
+/*    var radios = document.getElementsByName( 'startScreen' );
     for( i = 0; i < radios.length; i++ ) {
         if( radios[i].checked ) {
             console.log("found="+radios[i].value)
             startScreen = radios[i].value;
         }
-    }
+    }*/
     externalBrowser = document.getElementById( 'externalBrowser' ).checked;
-
+/*
     $localstorage.set('theme', theme);
     console.log($localstorage.get('theme'));
     $localstorage.set('startScreen', startScreen);
     console.log($localstorage.get('startScreen'));
+    */
     $localstorage.set('externalBrowser', externalBrowser);
     console.log($localstorage.get('externalBrowser'));
     toastProvider.showToast("Settings Saved!", "short", "center")
