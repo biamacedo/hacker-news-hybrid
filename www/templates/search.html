@@ -6,7 +6,7 @@
     </div>
   </ion-header-bar>
   <ion-content>
-    <form ng-submit="goToSearchResults(searchData)" ng-init="searchData.type = 1">
+    <form ng-submit="goToSearchResults(searchData)" ng-init="searchData.type = 1; searchData.text = ''">
       <div class="list">
         <label class="item item-input item-select">
 			    <div class="input-label">

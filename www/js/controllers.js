@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, $state, externalBrowser, $ionicScrollDelegate) {
+.controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, $state, externalBrowser, toastProvider, $ionicScrollDelegate) {
 
 /*  // ---- Login Part ---
   // Form data for the login modal
@@ -52,6 +52,7 @@ angular.module('starter.controllers', [])
 
   // Open the user modal
   $scope.userSearch = function() {
+    $scope.userData.username = "";
     $scope.userModal.show();
   };
 
@@ -59,9 +60,13 @@ angular.module('starter.controllers', [])
   $scope.goToUserProfile = function() {
     console.log('Going to User Profile', $scope.userData);
 
-    $state.go('app.user', {'userId': $scope.userData.username});
-    $scope.userData.username = "";
-    $scope.closeUserSearch();
+    if($scope.userData.username !== ""){
+      $state.go('app.user', {'userId': $scope.userData.username});
+      $scope.userData.username = "";
+      $scope.closeUserSearch();
+    } else{
+      toastProvider.showToast("Please fill input field!", "short", "center")
+    }
   };
 
   /*-- Search Modal --*/
@@ -78,7 +83,6 @@ angular.module('starter.controllers', [])
 
   // Open the user modal
   $scope.search = function() {
-    $scope.searchType = "1";
     $scope.searchModal.show();
   };
 
@@ -86,11 +90,15 @@ angular.module('starter.controllers', [])
   $scope.goToSearchResults = function(searchData) {
     console.log('Going to Search Results' + searchData);
 
-    $state.go('app.searchResults', {'type': searchData.type, 'text': searchData.text});
-    // Resetting Inputs
-    searchData.type = "1";
-    searchData.text = "";
-    $scope.closeSearch();
+    if(searchData.text !== ""){
+      $state.go('app.searchResults', {'type': searchData.type, 'text': searchData.text});
+      // Resetting Inputs
+      searchData.type = "1";
+      searchData.text = "";
+      $scope.closeSearch();
+    } else{
+      toastProvider.showToast("Please fill input field!", "short", "center")
+    }
   };
 
 
@@ -112,17 +120,6 @@ angular.module('starter.controllers', [])
   $scope.scrollTop = function() {
     $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop(true);
   };
-})
-
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-  { title: 'Reggae', id: 1 },
-  { title: 'Chill', id: 2 },
-  { title: 'Dubstep', id: 3 },
-  { title: 'Indie', id: 4 },
-  { title: 'Rap', id: 5 },
-  { title: 'Cowbell', id: 6 }
-  ];
 })
 
 .controller('TopStoriesCtrl', function($scope, $state, $q, loading, hackerNewsApi, socialSharing, externalBrowser) {
