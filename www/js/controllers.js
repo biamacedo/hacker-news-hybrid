@@ -1004,6 +1004,11 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('AboutCtrl', function($scope) {
+.controller('AboutCtrl', function($scope, externalBrowser) {
+    //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    externalBrowser.open(url);
+  };
+
 });
 
