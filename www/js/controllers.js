@@ -733,7 +733,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SearchResultsCtrl', function($scope, $state, $stateParams, loading, searchApi, socialSharing) {
+.controller('SearchResultsCtrl', function($scope, $state, $stateParams, loading, searchApi, socialSharing, commentParser) {
     console.log("arrived at results!");
     $scope.type = $stateParams.type;
     console.log($stateParams.type);
@@ -826,6 +826,10 @@ angular.module('starter.controllers', [])
 
   $scope.share = function(title, url) {
     socialSharing.share(title, url);
+  }
+
+  $scope.parseComment = function(text) {
+    return commentParser.parse(text);
   }
 })
 
