@@ -848,7 +848,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('UserCommentsCtrl', function($scope, $state, $stateParams, loading, hackerNewsApi, commentParser) {
+.controller('UserCommentsCtrl', function($scope, $state, $stateParams, $q, loading, hackerNewsApi, searchApi, commentParser) {
   $scope.storyComments = [];
 
   loading.show();
@@ -869,7 +869,7 @@ angular.module('starter.controllers', [])
             var comment = result.data;
 
             if(comment.deleted !== true && comment.type === "comment"){ // some comments can be deleted by HN / marked as [flagged]
-              //console.log(comment.by);
+              //console.log(comment);
               comment.text = commentParser.parse(comment.text)
               $scope.storyComments.push(comment);
             }
@@ -880,8 +880,25 @@ angular.module('starter.controllers', [])
     });
 
 
-    $scope.goToCommentsPage = function(id){
-    $state.go('app.comments', {'storyId': id});
+    $scope.goToCommentStoryPage = function(commentId){
+      var commentItem;
+      var storyId;
+      loading.show();
+
+      searchApi.searchItem(commentId)
+        .error(function (result) {
+          loading.hide();
+          console.log("error");
+        })
+        .then(function (result) {
+          //console.log(JSON.stringify(result.data));
+          commentItem = result.data;  
+          //console.log(result.data.hits);
+          storyId = commentItem.story_id;
+
+          loading.hide();
+          $state.go('app.comments', {'storyId': storyId});
+      });
   };
 
 })

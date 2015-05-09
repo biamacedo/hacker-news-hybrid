@@ -260,6 +260,12 @@ angular.module('starter.services', [])
       function getUrl(path) {
         return searchRef + path;
       };
+
+      function getUrlItem(id) {
+        var httpLink = getUrl(itemPath) + id;
+        console.log(httpLink);
+        return httpLink;
+      };
       
       function getUrlForSearchByTextAndTag(text, tags) {
         var httpLink = getUrl(searchPath) + queryPath + text + and + tagsPath + tags;
@@ -287,6 +293,10 @@ angular.module('starter.services', [])
         return $http.get(getUrlForSearchByTextAndTag(text, "show_hn"));
       };
 
+      function fetchItem(id) {
+        console.log("Fetch Item");
+        return $http.get(getUrlItem(id));
+      };
 
       return{
             searchStory: function(text){
@@ -300,6 +310,9 @@ angular.module('starter.services', [])
             }, 
             searchShow: function(text){
               return fetchShow(text);
+            }, 
+            searchItem: function(id){
+              return fetchItem(id);
             }
       };
   });
