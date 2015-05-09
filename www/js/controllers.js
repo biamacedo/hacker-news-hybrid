@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, $state, externalBrowser, $ionicScrollDelegate) {
+.controller('AppCtrl', function($scope, $http, $ionicModal, $timeout, $state, externalBrowser, toastProvider, $ionicScrollDelegate) {
 
 /*  // ---- Login Part ---
   // Form data for the login modal
@@ -52,6 +52,7 @@ angular.module('starter.controllers', [])
 
   // Open the user modal
   $scope.userSearch = function() {
+    $scope.userData.username = "";
     $scope.userModal.show();
   };
 
@@ -59,10 +60,47 @@ angular.module('starter.controllers', [])
   $scope.goToUserProfile = function() {
     console.log('Going to User Profile', $scope.userData);
 
-    $state.go('app.user', {'userId': $scope.userData.username});
-
-    $scope.closeUserSearch();
+    if($scope.userData.username !== ""){
+      $state.go('app.user', {'userId': $scope.userData.username});
+      $scope.userData.username = "";
+      $scope.closeUserSearch();
+    } else{
+      toastProvider.showToast("Please fill input field!", "short", "center")
+    }
   };
+
+  /*-- Search Modal --*/
+  $ionicModal.fromTemplateUrl('templates/search.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.searchModal = modal;
+  });
+
+    // Triggered in the user modal to close it
+  $scope.closeSearch = function() {
+    $scope.searchModal.hide();
+  };
+
+  // Open the user modal
+  $scope.search = function() {
+    $scope.searchModal.show();
+  };
+
+  // Perform the user action when the user searchs for a user name
+  $scope.goToSearchResults = function(searchData) {
+    console.log('Going to Search Results' + searchData);
+
+    if(searchData.text !== ""){
+      $state.go('app.searchResults', {'type': searchData.type, 'text': searchData.text});
+      // Resetting Inputs
+      searchData.type = "1";
+      searchData.text = "";
+      $scope.closeSearch();
+    } else{
+      toastProvider.showToast("Please fill input field!", "short", "center")
+    }
+  };
+
 
     //https://github.com/apache/cordova-plugin-inappbrowser
   $scope.openBrowser = function(url){
@@ -82,17 +120,6 @@ angular.module('starter.controllers', [])
   $scope.scrollTop = function() {
     $ionicScrollDelegate.$getByHandle('mainScroll').scrollTop(true);
   };
-})
-
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-  { title: 'Reggae', id: 1 },
-  { title: 'Chill', id: 2 },
-  { title: 'Dubstep', id: 3 },
-  { title: 'Indie', id: 4 },
-  { title: 'Rap', id: 5 },
-  { title: 'Cowbell', id: 6 }
-  ];
 })
 
 .controller('TopStoriesCtrl', function($scope, $state, $q, loading, hackerNewsApi, socialSharing, externalBrowser) {
@@ -654,23 +681,23 @@ angular.module('starter.controllers', [])
 })
 
 .controller('SettingsCtrl', function($scope, $localstorage, toastProvider) {
-    var theme = 'light';
-    var startScreen = "top";
+    /*var theme = 'light';
+    var startScreen = "top";*/
     var externalBrowser = true;
-
+/*
       theme = $localstorage.get('theme');      
       console.log($localstorage.get('theme'));
 
       startScreen = $localstorage.get('startScreen');
       var radio = document.getElementById( startScreen );
       radio.checked = true;
-
+*/
       if($localstorage.get('externalBrowser') === 'true'){
         document.getElementById( 'externalBrowser' ).checked = true;
       } else {
         document.getElementById( 'externalBrowser' ).checked = false;
       };
-
+/*
   $scope.lightButton = function(){
     theme = "light";
    };
@@ -681,21 +708,22 @@ angular.module('starter.controllers', [])
     theme = "blue";
    };
    
-
+*/
   $scope.save = function(){
-    var radios = document.getElementsByName( 'startScreen' );
+/*    var radios = document.getElementsByName( 'startScreen' );
     for( i = 0; i < radios.length; i++ ) {
         if( radios[i].checked ) {
             console.log("found="+radios[i].value)
             startScreen = radios[i].value;
         }
-    }
+    }*/
     externalBrowser = document.getElementById( 'externalBrowser' ).checked;
-
+/*
     $localstorage.set('theme', theme);
     console.log($localstorage.get('theme'));
     $localstorage.set('startScreen', startScreen);
     console.log($localstorage.get('startScreen'));
+    */
     $localstorage.set('externalBrowser', externalBrowser);
     console.log($localstorage.get('externalBrowser'));
     toastProvider.showToast("Settings Saved!", "short", "center")
@@ -703,19 +731,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('SearchCtrl', function($scope, $state) {
-  console.log("At least controller correct");
-  $scope.searchType = "1";
-
-  $scope.goToResults = function(type, data) {
-       console.log("Moving to Results");
-        $state.go('app.searchResults', {'type': type, 'text': data});
-        console.log("did we go?!");
-  };
-
-})
-
-.controller('SearchResultsCtrl', function($scope, $state, $stateParams, loading, searchApi, socialSharing) {
+.controller('SearchResultsCtrl', function($scope, $state, $stateParams, loading, searchApi, socialSharing, commentParser) {
     console.log("arrived at results!");
     $scope.type = $stateParams.type;
     console.log($stateParams.type);
@@ -809,10 +825,13 @@ angular.module('starter.controllers', [])
   $scope.share = function(title, url) {
     socialSharing.share(title, url);
   }
+
+  $scope.parseComment = function(text) {
+    return commentParser.parse(text);
+  }
 })
 
 .controller('UserCtrl', function($scope, $stateParams, hackerNewsApi) {
-  
   hackerNewsApi.getUser($stateParams.userId)
     .error(function (result) {
       console.log(result.error);
@@ -820,13 +839,18 @@ angular.module('starter.controllers', [])
     .then(function (result) {
       //console.log(result);
       var user = result.data;
-      //console.log(user.id);
-      $scope.user = user;
+      console.log(user);
+      if(user === null){
+        $scope.error = 'error';
+      } else{
+        $scope.user = user;
+        $scope.error = 'no-error';
+      }
     });
 
 })
 
-.controller('UserCommentsCtrl', function($scope, $stateParams, loading, hackerNewsApi, commentParser) {
+.controller('UserCommentsCtrl', function($scope, $state, $stateParams, $q, loading, hackerNewsApi, searchApi, commentParser) {
   $scope.storyComments = [];
 
   loading.show();
@@ -846,9 +870,8 @@ angular.module('starter.controllers', [])
           .then(function (result) {
             var comment = result.data;
 
-
             if(comment.deleted !== true && comment.type === "comment"){ // some comments can be deleted by HN / marked as [flagged]
-              //console.log(comment.by);
+              //console.log(comment);
               comment.text = commentParser.parse(comment.text)
               $scope.storyComments.push(comment);
             }
@@ -858,73 +881,100 @@ angular.module('starter.controllers', [])
       loading.hide();
     });
 
+
+    $scope.goToCommentStoryPage = function(commentId){
+      var commentItem;
+      var storyId;
+      loading.show();
+
+      searchApi.searchItem(commentId)
+        .error(function (result) {
+          loading.hide();
+          console.log("error");
+        })
+        .then(function (result) {
+          //console.log(JSON.stringify(result.data));
+          commentItem = result.data;  
+          //console.log(result.data.hits);
+          storyId = commentItem.story_id;
+
+          loading.hide();
+          $state.go('app.comments', {'storyId': storyId});
+      });
+  };
+
 })
 
-.controller('UserStoriesCtrl', function($scope, $state,$stateParams, loading, hackerNewsApi, socialSharing, externalBrowser) {
+.controller('UserStoriesCtrl', function($scope, $state, $stateParams, $q, loading, hackerNewsApi, socialSharing, externalBrowser) {
     $scope.pageSize = 30;
     $scope.totalItemsLoaded = 0;
     $scope.totalItemsArray = 0; // Total Array Size
     $scope.viewTitle = "User Threads"; //Necessary because all lists use the same template
     var storiesIds = [];
+    //$stateParams.userId
 
   $scope.doRefresh = function() {
     $scope.totalItemsLoaded = 0;
     $scope.storyList = [];
+    var promisses = [];
 
     loading.show();
-    hackerNewsApi.getUser($stateParams.userId)
-        .error(function (result) {
-          console.log(result.error);
-        })
-        .then(function (result) {
-          //console.log(result);
-          var user = result.data;
-          //console.log(user.id);
-          $scope.user = user;
-          storiesIds = user.submitted;
-          $scope.totalItemsArray = user.submitted.length;
+    $q.when(hackerNewsApi.getUser($stateParams.userId)).then(function(result) {
+        console.log("List Returned")
+        storiesIds = result.data.submitted;
+        //cconsole.log(storiesIds);
 
-          for(var i = 0; i < $scope.totalItemsArray && i < $scope.pageSize; i++) {
-            hackerNewsApi.getItem(storiesIds[i])
-              .then(function (result) {
-                var story = result.data;
+        for (var i = 0; i < $scope.pageSize; i++) {
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
+        }
 
-                if(story.deleted !== true && story.type === "story"){ // some comments can be deleted by HN / marked as [flagged]
-                  console.log(story);
-                  $scope.storyList.push(result.data);
-                  $scope.totalItemsLoaded++;
-                  console.log($scope.totalItemsLoaded);
-                }
-              });
-
-          };
-          // Stop the ion-refresher from spinning
-          $scope.$broadcast('scroll.refreshComplete');
-          console.log("Refresh Done");
-
-          loading.hide();
+        //cconsole.log(promisses);
+        $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //cconsole.log(arrayOfResponses);
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              if(arrayOfResponses[i].data.deleted !== true && arrayOfResponses[i].data.type === "story"){
+                $scope.storyList.push(arrayOfResponses[i].data);
+                $scope.totalItemsLoaded++;
+              }
+            }
+            
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
         });
+     });
 
   };
 
   $scope.loadMoreData = function() {
     console.log('Loading more data!');
-
+    var promisses = [];
     loading.show();
-    var initialTotalItems = $scope.totalItemsLoaded;
-    for (var i = initialTotalItems; i < (initialTotalItems + $scope.pageSize) 
-      && $scope.totalItemsLoaded < $scope.totalItemsArray; i++) {
-      hackerNewsApi.getItem(storiesIds[i])
-        .then(function (result) {
-          $scope.storyList.push(result.data);
-          $scope.totalItemsLoaded++;
-        });
+
+    for (var i = $scope.totalItemsLoaded; i < ($scope.totalItemsLoaded + $scope.pageSize) 
+      && $scope.totalItemsLoaded <= $scope.totalItemsArray; i++) {
+          promisses.push(hackerNewsApi.getItem(storiesIds[i]));
     };
 
-   // Stop the ion-refresher from spinning
-    $scope.$broadcast('scroll.refreshComplete');
-    console.log("Refresh Done");
-    loading.hide();
+    //cconsole.log(promisses);
+    $q.all(promisses).then( function(arrayOfResponses) {
+            console.log('all set');
+            //cconsole.log(arrayOfResponses);
+
+            for (var i = 0; i < arrayOfResponses.length; i++) {
+              if(arrayOfResponses[i].data.deleted !== true && arrayOfResponses[i].data.type === "story"){
+                $scope.storyList.push(arrayOfResponses[i].data);
+                $scope.totalItemsLoaded++;
+              }
+            }
+
+            loading.hide();
+            // Stop the ion-refresher from spinning
+            $scope.$broadcast('scroll.refreshComplete');
+            console.log("Refresh Done");
+     });
   };
 
   $scope.moreDataCanBeLoaded = function() {
@@ -951,6 +1001,11 @@ angular.module('starter.controllers', [])
 })
 
 
-.controller('AboutCtrl', function($scope) {
+.controller('AboutCtrl', function($scope, externalBrowser) {
+    //https://github.com/apache/cordova-plugin-inappbrowser
+  $scope.openBrowser = function(url){
+    externalBrowser.open(url);
+  };
+
 });
 

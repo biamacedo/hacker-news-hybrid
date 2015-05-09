@@ -5,7 +5,7 @@
 	  <div  class="item item-divider" style="padding-bottom: 20px;">
 		<!--<hr style="height:5pt; visibility:hidden;" />-->
 		<p>Created: {{story.time * 1000 | timeAgo}}</p>
-	    <span class="item-text-wrap"><b>{{story.title}}</b></span>
+	    <span class="item-text-wrap" ng-click="openBrowser(story.url)"><b>{{story.title}}</b></span>
 	    <a class="badge badge-positive" href="#/app/user/{{story.by}}" style="text-decoration: none;margin-right:-20px;margin-top:-2px;">
 			{{story.by}}
 		</a> 

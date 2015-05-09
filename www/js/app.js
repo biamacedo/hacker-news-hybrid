@@ -133,7 +133,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
     }
   })
 
-  .state('app.search', {
+/*  .state('app.search', {
     url: "/search",
     views: {
       'menuContent': {
@@ -141,7 +141,7 @@ angular.module('starter', ['ionic', 'starter.controllers','starter.services', 'f
         controller: 'SearchCtrl'
       }
     }
-  })
+  })*/
   .state('app.searchResults', {
     url: "/searchResults/:type/:text",
     views: {

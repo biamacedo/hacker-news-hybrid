@@ -53,10 +53,13 @@
             <div style="background-color:#F5F5F5;position:absolute;width:20px;height:105%;margin-top:-20px;margin-left:-20px;"></div>
             <div style="margin-left:20px;">
               <a class="badge badge-positive" href="#/app/user/{{comment.author}}" style="text-decoration: none;margin-top:-7px;margin-right:-20px;">
-            {{comment.author}} | {{comment.created_at_i * 1000 | timeAgo}}
-            </a>
-            <hr style="height:5pt; visibility:hidden;" />
-              <span class="comment-text item-text-wrap" ng-bind-html="comment.comment_text"></span>
+                {{comment.author}} | {{comment.created_at_i * 1000 | timeAgo}}
+              </a>
+              <button class="button button-clear button-positive" ng-click="goToCommentsPage(comment.story_id)" style="margin-top:-20px;margin-left:-20px;">
+                  <i class="icon ion-bookmark"></i>
+              </button> </span>
+              <hr style="height:5pt; visibility:hidden;" />
+              <span class="comment-text item-text-wrap" ng-bind-html="parseComment(comment.comment_text)"></span>
           </div>
           </div>
         </div>
